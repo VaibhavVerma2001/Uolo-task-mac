@@ -1,6 +1,5 @@
 .card{
     border: 1px solid #E2E2E2;
-    
     width: 268px;
     height: auto;
     border-radius: 16px;
@@ -61,4 +60,10 @@
 .card .email{
     font-size: 18px;
     font-weight: 400;
+}
+
+@media screen and (max-width: 556px) {
+    .card {
+        width: 300px;
+    }
 }

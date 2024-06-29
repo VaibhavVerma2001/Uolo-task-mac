@@ -148,3 +148,22 @@
     color: #ffffff;
 }
 
+
+
+@media screen and (max-width: 993px) {
+    .main .search {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 844px) {
+    .main .search {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 556px) {
+    .main .search {
+        width: 50%;
+    }
+}

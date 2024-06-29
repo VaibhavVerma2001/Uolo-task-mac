@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './main.css';
 import searchImg from '../../static/search.png';
@@ -6,8 +6,9 @@ import Card from '../Card/Card';
 import EmptyImg from '../../static/empty_box.png';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import UserContext from '../../context/UserContext';
 import Loading from '../Loading/Loading';
+
+
 
 function Main() {
 
@@ -18,29 +19,22 @@ function Main() {
   const pageNumbers = [...Array(totalPage + 1).keys()].slice(1);
 
   const host = "http://localhost:5000";
-
-  const context = useContext(UserContext);
-  const { loading, setLoading } = context;
-
-  const [isLoading,setisLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Fetch Users
   const fetchData = async () => {
     console.log("fetching data");
     try {
-      // setLoading(true);
-      setisLoading(true);
+      setLoading(true);
       const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`);
       // console.log(res.data);
       setUsers(res.data.user);
       // set total pages
       setTotalPage(Math.ceil(res.data.total / limit));
-
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
-    setisLoading(false);
-    // setLoading(false);
   }
 
 
@@ -101,10 +95,8 @@ function Main() {
 
   return (
     <div className='main'>
-      {isLoading ? (
-        <>
-        Loading...
-        </>
+      {loading ? (
+        <Loading />
       ) : (
         <>
           <span className="head">Our Team</span>
