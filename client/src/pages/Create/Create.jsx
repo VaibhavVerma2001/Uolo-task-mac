@@ -12,4 +12,4 @@ function Create() {
   )
 }
 
-export default Create
+export default Create;

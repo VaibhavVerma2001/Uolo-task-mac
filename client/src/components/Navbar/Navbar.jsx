@@ -14,12 +14,12 @@ function Navbar() {
                     <span className={`${active === true ? 'active-span' : 'inactive-span'}`}>All Team Member</span>
                 </div>
             </Link>
-
+            
 
             <Link className='link' to={'/create'} onClick={() => setActive(false)}>
-                <div className={`item ${active === true ? 'inactive' : 'active'}`}>
+                <div className={`item ${active === false ? 'active' : 'inactive'}`}>
                     <PersonAddAltIcon className='icon' />
-                    <span className={`${active === true ? 'inactive-span' : 'active-span'}`}>Create Profile</span>
+                    <span className={`${active === false ? 'active-span' : 'inactive-span'}`}>Create Profile</span>
                 </div>
             </Link>
 
@@ -27,4 +27,4 @@ function Navbar() {
     )
 }
 
-export default Navbar
+export default Navbar;
