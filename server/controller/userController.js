@@ -1,47 +1,58 @@
 var users = require("../contant/userData");
 
 // Get all users on that Page
-const getAllUsers = async(req, res) => {
+const getAllUsers = async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 8;
         const page = parseInt(req.query.page) || 1;
-        
+
         // Handle Invalid page and limits
-        if(page < 1){
-            return res.status(400).json({error : "Invalid page"});
+        if (isNaN(page) || page < 1) {
+            return res.status(400).json({ error: "Invalid page" });
         }
 
-        if(limit < 1){
-            return res.status(400).json({error : "Invalid limit"});
+        if (isNaN(limit) || limit < 1) {
+            return res.status(400).json({ error: "Invalid limit" });
         }
 
-        
+
         let startIndex = (page - 1) * limit;
         let endIndex = startIndex + limit;
 
         let total = users.length;
-        const user = users.slice(startIndex,endIndex);
-        return res.status(200).json({user, total});
+        const user = users.slice(startIndex, endIndex);
+        return res.status(200).json({ user, total });
 
     } catch (err) {
-        res.status(500).json({ msg: "Something Went Wrong!", error: err })
         console.log(err);
+        res.status(500).json({ msg: "Something Went Wrong!", error: err });
     }
 };
 
 
 //Get specific user
 const getUser = async (req, res) => {
-    const userId = req.params.userId;
+    try {
+        const userId = req.params.userId;
 
-    let FoundUser = users.filter((user) => { return userId == user.id });
+        // Validate userId
+        if (!userId || isNaN(userId)) {
+            return res.status(400).json({ error: "Invalid userId. It must be a number." });
+        }
 
-    if (!FoundUser.length) {
-        console.log("No user found with given Id!");
-        return res.status(200).json({ "msg": "No user found with given Id!" });
+        let FoundUser = users.find((user) => { return user.id === parseInt(userId) });
+
+        if (!FoundUser) {
+            console.log("No user found with given Id!");
+            return res.status(200).json({ "msg": "No user found with given Id!" });
+        }
+
+        return res.status(200).json(FoundUser);
+    } catch (error) {
+        res.status(500).json({ msg: "Something Went Wrong!", error: err })
+        console.log(err);
     }
 
-    return res.status(200).json(FoundUser);
 };
 
 
@@ -53,7 +64,16 @@ const addUser = async (req, res) => {
         if (!name || !email) {
             // 206 code is for partial content
             console.log("Name and Email are required.")
-            return res.status(206).json("Name and Email are required.")
+            return res.status(206).json({ error: "Name and Email are required." })
+        }
+
+        if (typeof name !== 'string' || typeof email !== 'string') {
+            return res.status(400).json({ error: "Name and Email must be strings." });
+        }
+
+        // Check if email already exists
+        if (users.some(user => user.email === email)) {
+            return res.status(400).json({ error: "Email already exists." });
         }
 
         // to add new id by doing +1 to existing users
@@ -81,10 +101,18 @@ const addUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const userId = req.params.userId;
+
+        // Validate userId
+        if (!userId || isNaN(userId)) {
+            return res.status(400).json({ error: "Invalid userId. It must be a number." });
+        }
+
         let updatedUsers = users.filter((user) => { return user.id != userId })
+
         users = updatedUsers;
-        console.log(`User with id :${userId}, deleted successfully!`,users.length);
-        res.status(200).json({msg :`User with id :${userId}, deleted successfully!`});
+
+        console.log(`User with id :${userId}, deleted successfully!`, users.length);
+        res.status(200).json({ msg: `User with id :${userId}, deleted successfully!` });
 
     } catch (err) {
         console.log(err);

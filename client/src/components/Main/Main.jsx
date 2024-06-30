@@ -39,7 +39,6 @@ function Main() {
   }
 
 
-  // never write same thing in dependency array which we are setting in usestate otherwise it will run infinite loop
   useEffect(() => {
     fetchData();
   }, [page]);
@@ -54,7 +53,6 @@ function Main() {
       // fetch data again after deleting to handle pagination etc
       fetchData();
 
-      // if page > 1 and all data deleted on that page then move to previous page
       // console.log(users, users.length);
       if (page > 1 && users.length === 1) {
         setPage(page - 1);
@@ -80,19 +78,9 @@ function Main() {
   }
 
   // Function to disable next and previous buttons
-  const disablePrev = () => {
-    if (page === 1) {
-      return true;
-    }
-    return false;
-  }
-
-  const disableNext = () => {
-    if (page === totalPage) {
-      return true;
-    }
-    return false;
-  }
+    // Disable previous and next buttons
+    const disablePrev = page === 1;
+    const disableNext = page === totalPage;
 
   return (
     <div className='main'>
@@ -125,7 +113,7 @@ function Main() {
 
             {/* Pagination */}
             <div className="btn-container">
-              <div className={`page-item ${disablePrev() ? 'disabled-arrow' : ''}`} onClick={handlePrevPage} >
+              <div className={`page-item ${disablePrev ? 'disabled-arrow' : ''}`} onClick={handlePrevPage} >
                 <KeyboardArrowLeftIcon className='arrow-icon' />
               </div>
 
@@ -139,7 +127,7 @@ function Main() {
                 </div>
               ))}
 
-              <div className={`page-item ${disableNext() ? 'disabled-arrow' : ''}`} onClick={handleNextPage} >
+              <div className={`page-item ${disableNext ? 'disabled-arrow' : ''}`} onClick={handleNextPage} >
                 <KeyboardArrowRightIcon className='arrow-icon' />
               </div>
 
