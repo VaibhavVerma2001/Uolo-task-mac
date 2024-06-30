@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './navbar.css';
 import GroupIcon from '@mui/icons-material/Group';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function Navbar() {
-    const [active, setActive] = useState(true);
+    const location = useLocation();
+    const path = location.pathname;
+    
     return (
         <div className='navbar'>
-            <Link className='link' to={'/'} onClick={() => setActive(true)}>
-                <div className={`item ${active === true ? 'active' : 'inactive'}`}  >
+
+            <Link className='link' to={'/'}>
+                <div className={`item ${path === "/" ? 'active' : 'inactive'}`}  >
                     <GroupIcon className='icon' />
-                    <span className={`${active === true ? 'active-span' : 'inactive-span'}`}>All Team Member</span>
+                    <span className={`${path === "/" ? 'active-span' : 'inactive-span'}`}>All Team Member</span>
                 </div>
             </Link>
             
 
-            <Link className='link' to={'/create'} onClick={() => setActive(false)}>
-                <div className={`item ${active === false ? 'active' : 'inactive'}`}>
+            <Link className='link' to={'/create'}>
+                <div className={`item ${path === "/create" ? 'active' : 'inactive'}`}>
                     <PersonAddAltIcon className='icon' />
-                    <span className={`${active === false ? 'active-span' : 'inactive-span'}`}>Create Profile</span>
+                    <span className={`${path === "/create" ? 'active-span' : 'inactive-span'}`}>Create Profile</span>
                 </div>
             </Link>
 

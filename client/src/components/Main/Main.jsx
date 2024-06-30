@@ -27,8 +27,9 @@ function Main() {
     try {
       setLoading(true);
       const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`);
-      // console.log(res.data);
+      // console.log("backend" , res.data);
       setUsers(res.data.user);
+      // console.log(users);
       // set total pages
       setTotalPage(Math.ceil(res.data.total / limit));
       setLoading(false);
