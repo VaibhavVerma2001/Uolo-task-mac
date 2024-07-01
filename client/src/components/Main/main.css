@@ -5,7 +5,6 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    justify-content: center;
 }
 
 .main .head {
@@ -133,6 +132,7 @@
 }
 
 .main .btn-container .disabled-arrow{
+    color: rgb(163, 161, 161);
     cursor: not-allowed;
 }
 
@@ -146,6 +146,35 @@
 
 .main .btn-container .active-page-num{
     color: #ffffff;
+}
+
+
+/* server error page css */
+.main .error{
+    height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.main .error img{
+    width: 450px;
+}
+
+.mian .error .vert-move {
+    -webkit-animation: mover 1.3s infinite  alternate;
+    animation: mover 1.3s infinite  alternate;
+}
+
+@-webkit-keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
+}
+
+@keyframes mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
 }
 
 

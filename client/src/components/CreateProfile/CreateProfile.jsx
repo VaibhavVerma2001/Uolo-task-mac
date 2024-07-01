@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './profile.css';
+import './createprofile.css';
 
 function Profile() {
 
@@ -66,10 +66,10 @@ function Profile() {
                     <input type="text" id='email' name='email' value={email} placeholder='Enter email' onChange={(e) => setEmail(e.target.value)} />
 
                     <label htmlFor="password">Password<span className="red">*</span></label>
-                    <input type="text" id='password' name='password' value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" id='password' name='password' value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} />
 
                     <label htmlFor="cpassword">Confirm Password<span className="red">*</span></label>
-                    <input type="text" id='cpassword' name='cpassword' value={cpassword} placeholder='Confirm Password' onChange={(e) => setCpassword(e.target.value)} />
+                    <input type="password" id='cpassword' name='cpassword' value={cpassword} placeholder='Confirm Password' onChange={(e) => setCpassword(e.target.value)} />
 
                 </div>
 
