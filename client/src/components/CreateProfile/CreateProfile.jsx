@@ -3,15 +3,35 @@ import './createprofile.css';
 
 function Profile() {
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [cpassword, setCpassword] = useState("");
+    const [values, setValues] = useState({
+        name: "",
+        email: "",
+        password: "",
+        cpassword: ""
+    });
+
+    var errors = {};
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("saving..");
         try {
-            console.log('Saving', name, email, password, cpassword);
+
+            if (validate()) {
+                console.log('Saving', values.name, values.email, values.password, values.cpassword);
+                alert(`Saving, ${values.name}, ${values.email}, ${values.password}, ${values.cpassword}`);
+
+                // make states Null after submitting data
+                setValues({
+                    name: "",
+                    email: "",
+                    password: "",
+                    cpassword: ""
+                });
+            }
+
+            console.log(errors);
+
         } catch (error) {
             console.log(error);
         }
@@ -22,25 +42,61 @@ function Profile() {
         e.preventDefault();
 
         // Make states Empty
-        setName("");
-        setEmail("");
-        setPassword("");
-        setCpassword("");
+        setValues({
+            name: "",
+            email: "",
+            password: "",
+            cpassword: ""
+        });
     }
 
-    // Validate function -> to validate data given in the form
+    // Disable function -> to disable submit button if all field are not filled
     const isDisable = () => {
-        if (name === "" || email === "" || password === "" || cpassword === "") {
+        if (values.name === "" || values.email === "" || values.password === "" || values.cpassword === "") {
             return true;
         }
 
         return false;
     }
 
+    const validate = (errors) => {
+        let error = {};
+        let IsValid = true;
+
+        if (values["name"].length < 4) {
+            IsValid = false;
+            error["name"] = "4 letters";
+        }
+
+        if (values.email.length < 5) {
+            IsValid = false;
+            error["email"] = "Invalid error";
+        }
+
+        if (values.password.length < 4) {
+            IsValid = false;
+            errors["password"] = "4 chars Password";
+        }
+
+        if (values.password !== values.cpassword) {
+            IsValid = false;
+            errors["cpassword"] = "Passwords should match!";
+        }
+
+        errors = error;
+        return IsValid;
+    }
+
+
+    // handle onchange
+    const handleChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+    }
+
     return (
         <div className='profile'>
             <span className="head">Create Profile</span>
-            <form >
+            <form>
                 <div className="form-container">
                     <span>Upload Photo<span className="red">*</span></span>
                     <span className='msg'>Upload a passport size photo</span>
@@ -60,16 +116,20 @@ function Profile() {
                     </svg>
 
                     <label htmlFor="name">Name<span className="red">*</span></label>
-                    <input type="text" id='name' name='name' value={name} placeholder='Enter full name' onChange={(e) => setName(e.target.value)} />
-
+                    <input type="text" id='name' name='name' value={values.name} placeholder='Enter full name' onChange={handleChange} />
+                    {errors["name"] && <span className='error-text'>Name must contain atleast 4 letters</span>}
+                    
                     <label htmlFor="email">Email-ID<span className="red">*</span></label>
-                    <input type="text" id='email' name='email' value={email} placeholder='Enter email' onChange={(e) => setEmail(e.target.value)} />
+                    <input type="text" id='email' name='email' value={values.email} placeholder='Enter email' onChange={handleChange} />
+                    {errors["email"] && <span className='error-text'>Enter valid email</span>}
 
                     <label htmlFor="password">Password<span className="red">*</span></label>
-                    <input type="password" id='password' name='password' value={password} placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" id='password' name='password' value={values.password} placeholder='Enter password' onChange={handleChange} />
+                    {errors["password"] && <span className='error-text'>Password must contain atleast 4 letters</span>}
 
                     <label htmlFor="cpassword">Confirm Password<span className="red">*</span></label>
-                    <input type="password" id='cpassword' name='cpassword' value={cpassword} placeholder='Confirm Password' onChange={(e) => setCpassword(e.target.value)} />
+                    <input type="password" id='cpassword' name='cpassword' value={values.cpassword} placeholder='Confirm Password' onChange={handleChange} />
+                    {errors["cpassword"] && <span className='error-text'>Password and confirm password not matched!</span>}
 
                 </div>
 

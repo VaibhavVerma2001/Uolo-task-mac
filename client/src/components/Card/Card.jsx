@@ -7,9 +7,9 @@ function Card(props) {
     const { user,handleDelete } = props;
     return (
         <div className='card'>
-            <DeleteForeverIcon className='icon' onClick = {() => handleDelete(user.id)}/>
+            <DeleteForeverIcon className='icon' onClick = {() => handleDelete(user._id)}/>
 
-            <img src={user.img} alt="user-pic" />
+            <img src={user.imgUrl} alt="user-pic" />
 
             <p>{user.name}</p>
             <p className="email">{user.email}</p>

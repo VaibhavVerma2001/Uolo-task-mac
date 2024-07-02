@@ -1,27 +1,42 @@
 var users = require("../contant/userData");
+const User = require("../db/user");
+const mongoose = require("mongoose");
+
+// Add defauilt users
+const defaultData = async () => {
+    try {
+        const data = await User.insertMany(users);
+        console.log("Default data saved successfully.", data.length);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+// defaultData();
 
 
 // Get all users on that Page
 const getAllUsers = async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 8;
-        const page = parseInt(req.query.page) || 1;
+        let page = parseInt(req.query.page);
 
-        // Handle Invalid page and limits
+        // Handle invalid or missing page parameter
         if (isNaN(page) || page < 1) {
-            return res.status(400).json({ success : false, error: "Invalid page" });
+            return res.status(400).json({ success: false, error: "Invalid page" });
         }
 
-        if (isNaN(limit) || limit < 1) {
-            return res.status(400).json({success : false, error: "Invalid limit" });
+        const skipValue = (page - 1) * limit;
+
+        if (limit < 1) {
+            return res.status(400).json({ success: false, error: "Invalid limit" });
         }
 
-        let startIndex = (page - 1) * limit;
-        let endIndex = startIndex + limit;
+        // count total number of documents for adding pages in frontend
+        let total = await User.countDocuments();
 
-        let total = users.length;
-        const user = users.slice(startIndex, endIndex);
-        return res.status(200).json({success : true, user, total });
+        const user = await User.find().limit(limit).skip(skipValue);
+        return res.status(200).json({ success: true, user, total });
 
     } catch (err) {
         console.log(err);
@@ -35,24 +50,23 @@ const getUser = async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        // Validate userId
-        if (!userId || isNaN(userId)) {
-            return res.status(400).json({success : false, error: "Invalid userId. It must be a number." });
+        // Use built-in function for checking ObjectID.
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, msg: "Invalid User Id" });
         }
 
-        let FoundUser = users.find((user) => { return user.id === parseInt(userId) });
+        const foundUser = await User.findById(userId);
 
-        if (!FoundUser) {
+        if (!foundUser) {
             console.log("No user found with given Id!");
-            return res.status(200).json({success : false, "msg": "No user found with given Id!" });
+            return res.status(200).json({ success: false, "msg": "No user found with given Id!" });
         }
 
-        return res.status(200).json({success : true, FoundUser});
-    } catch (error) {
+        return res.status(200).json({ success: true, foundUser });
+    } catch (err) {
         res.status(500).json({ msg: "Something Went Wrong!", error: err })
         console.log(err);
     }
-
 };
 
 
@@ -63,37 +77,34 @@ const addUser = async (req, res) => {
         if (!name || !email) {
             // 206 code is for partial content
             console.log("Name and Email are required.")
-            return res.status(206).json({success : false, error: "Name and Email are required." })
+            return res.status(206).json({ success: false, error: "Name and Email are required." })
         }
 
         if (typeof name !== 'string' || typeof email !== 'string') {
-            return res.status(400).json({success : false, error: "Name and Email must be strings." });
+            return res.status(400).json({ success: false, error: "Name and Email must be strings." });
         }
 
         //check valid email
         let regex = new RegExp("([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\"\(\[\]!#-[^-~ \t]|(\\[\t -~]))+\")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])");
 
         if (!regex.test(email)) {
-            return res.status(400).json({success : false, error: "Invalid Email."});
+            return res.status(400).json({ success: false, error: "Invalid Email." });
         }
 
         // Check if email already exists
-        if (users.some(user => user.email === email)) {
-            return res.status(400).json({success : false, error: "Email already exists." });
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ success: false, error: "Email already exists." });
         }
 
-        // to add new id by doing +1 to existing users
-        let id = users.length + 1;
+        // Create a new user instance
+        const newUser = new User(req.body);
 
-        let newUser = {
-            id,
-            name,
-            email
-        }
+        // Save the new user to the database
+        await newUser.save();
 
-        users.push(newUser);
         console.log("New User Added.");
-        res.status(201).json({success: true, newUser});
+        res.status(201).json({ success: true, newUser });
 
     } catch (err) {
         console.log(err);
@@ -108,17 +119,17 @@ const deleteUser = async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        // Validate userId
-        if (!userId || isNaN(userId)) {
-            return res.status(400).json({success : false, error: "Invalid userId. It must be a number." });
+        // Use built-in function for checking ObjectID.
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, msg: "Invalid User Id" });
         }
 
-        let updatedUsers = users.filter((user) => { return user.id != userId })
+        let deletedUser = await User.findByIdAndDelete(userId);
 
-        users = updatedUsers;
-
-        // console.log(`User with id :${userId}, deleted successfully!`, users.length);
-        res.status(200).json({success: true, msg: `User with id :${userId}, deleted successfully!` });
+        if (!deletedUser) {
+            return res.status(400).json({ success: false, msg: "No user found with given userId." });
+        }
+        res.status(200).json({ success: true, msg: `User with id :${userId}, deleted successfully!` });
 
     } catch (err) {
         console.log(err);
