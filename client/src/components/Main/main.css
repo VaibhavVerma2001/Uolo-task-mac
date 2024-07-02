@@ -162,7 +162,7 @@
     width: 450px;
 }
 
-.mian .error .vert-move {
+.main .error .vert-move {
     -webkit-animation: mover 1.3s infinite  alternate;
     animation: mover 1.3s infinite  alternate;
 }

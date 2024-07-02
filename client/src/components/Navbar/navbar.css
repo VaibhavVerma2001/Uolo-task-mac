@@ -1,4 +1,4 @@
-.navbar{
+.side-navbar{
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -9,7 +9,7 @@
     z-index: 1;
 }
 
-.navbar .item{
+.side-navbar .item{
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -18,11 +18,11 @@
     gap: 8px;
 } 
 
-.navbar .item .icon{
+.side-navbar .item .icon{
     font-size: 24px;
 }
 
-.navbar .item span{
+.side-navbar .item span{
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 20px;
@@ -31,26 +31,26 @@
     cursor: pointer;
 }
 
-.navbar .active{
+.side-navbar .active{
     background-color: #561FE710; /* last 2 digits are for opacity */
     color: #561FE7;
 }
 
-.navbar .inactive{
+.side-navbar .inactive{
     color: #667085;
 }
 
-.navbar .active-span{
+.side-navbar .active-span{
     color: #561FE7;
 }
 
-.navbar .inactive-span{
+.side-navbar .inactive-span{
     color: #667085;
 }
 
 
 @media screen and (max-width: 993px) {
-    .navbar {
+    .side-navbar {
       display: none;
     }
   }

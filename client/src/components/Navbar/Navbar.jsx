@@ -10,7 +10,7 @@ function Navbar() {
     const path = location.pathname;
     
     return (
-        <div className='navbar'>
+        <div className='side-navbar'>
 
             <Link className='link' to={'/'}>
                 <div className={`item ${path === "/" ? 'active' : 'inactive'}`}  >

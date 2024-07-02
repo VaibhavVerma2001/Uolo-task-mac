@@ -15,7 +15,6 @@
     line-height: 40.32px;
     letter-spacing: 0.25;
     margin-bottom: 20px;
-    margin-top: 10px;
 }
 
 .profile .form-container{
@@ -84,6 +83,7 @@
     color: red;
     font-size: 12px;
     margin-top: -10px;
+    margin-bottom: 2px;
 }
 
 .profile .btn-container{
