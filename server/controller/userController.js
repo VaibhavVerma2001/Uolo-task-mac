@@ -1,6 +1,7 @@
 var users = require("../contant/userData");
-const User = require("../db/user");
+const User = require("../models/userModel");
 const mongoose = require("mongoose");
+const userService = require("../services/userService");
 
 // Add defauilt users
 const defaultData = async () => {
@@ -26,16 +27,11 @@ const getAllUsers = async (req, res) => {
             return res.status(400).json({ success: false, error: "Invalid page" });
         }
 
-        const skipValue = (page - 1) * limit;
-
         if (limit < 1) {
             return res.status(400).json({ success: false, error: "Invalid limit" });
         }
 
-        // count total number of documents for adding pages in frontend
-        let total = await User.countDocuments();
-
-        const user = await User.find().limit(limit).skip(skipValue);
+        const { user, total } = await userService.getAllUsers(page, limit);
         return res.status(200).json({ success: true, user, total });
 
     } catch (err) {
@@ -55,7 +51,7 @@ const getUser = async (req, res) => {
             return res.status(400).json({ success: false, msg: "Invalid User Id" });
         }
 
-        const foundUser = await User.findById(userId);
+        const foundUser = await userService.getUser(userId);
 
         if (!foundUser) {
             console.log("No user found with given Id!");
@@ -94,21 +90,18 @@ const addUser = async (req, res) => {
         // Check if email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ success: false, error: "Email already exists." });
+            console.log("Email already exists.")
+            return res.status(400).json({ success: false, error: "Email already exists" });
         }
 
-        // Create a new user instance
-        const newUser = new User(req.body);
-
-        // Save the new user to the database
-        await newUser.save();
+        const newUser = await userService.addUser(req.body);
 
         console.log("New User Added.");
         res.status(201).json({ success: true, newUser });
 
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: "Something Went Wrong!", error: err })
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ msg: "Something Went Wrong!", error: error.message })
     }
 };
 
@@ -124,7 +117,7 @@ const deleteUser = async (req, res) => {
             return res.status(400).json({ success: false, msg: "Invalid User Id" });
         }
 
-        let deletedUser = await User.findByIdAndDelete(userId);
+        let deletedUser = await userService.deleteUser(userId);
 
         if (!deletedUser) {
             return res.status(400).json({ success: false, msg: "No user found with given userId." });

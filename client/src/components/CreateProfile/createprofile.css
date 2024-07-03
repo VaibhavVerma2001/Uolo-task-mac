@@ -1,33 +1,43 @@
-.profile{
-    flex : 85%;
+.profile {
+    flex: 85%;
     background-color: #f5f5f5;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 72px);
+    padding: 20px;
 }
 
-.profile .head{
+.profile .myform {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+.profile .head {
     font-family: "Outfit", sans-serif;
     font-weight: 700;
     font-size: 32px;
     line-height: 40.32px;
     letter-spacing: 0.25;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-.profile .form-container{
+.profile .form-container {
     background-color: #ffffff;
-    width: 400px;
     border-radius: 20px 20px 0 0;
     border: 1px solid #EAECF0;
     padding: 24px 32px 10px 32px;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    max-width: 400px; 
 }
 
-.profile .form-container label,span{
+.profile .form-container label {
     font-family: "Open Sans", sans-serif;
     font-weight: 600;
     font-size: 14px;
@@ -37,7 +47,7 @@
     margin-bottom: 8px;
 }
 
-.profile .form-container .msg{
+.profile .form-container .msg {
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
     font-size: 12px;
@@ -46,18 +56,18 @@
     color: #667085;
 }
 
-.profile .form-container svg{
+.profile .form-container svg {
     cursor: pointer;
     margin: 8px 0 12px 0;
     height: 120px;
     width: 120px;
 }
 
-.profile .form-container .red{
+.profile .form-container .red {
     color: red;
 }
 
-.profile .form-container input{
+.profile .form-container input {
     height: 36px;
     border-radius: 6px;
     border: 1px solid #D0D5DD;
@@ -70,7 +80,7 @@
     color: #667085;
 }
 
-.profile .form-container input::placeholder{
+.profile .form-container input::placeholder {
     font-family: "Open Sans", sans-serif;
     font-weight: 400;
     font-size: 14px;
@@ -78,28 +88,27 @@
     color: #667085;
 }
 
-
-.profile .form-container .error-text{
+.profile .error-text {
     color: red;
     font-size: 12px;
     margin-top: -10px;
     margin-bottom: 2px;
 }
 
-.profile .btn-container{
+.profile .btn-container {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
     height: 65px;
     gap: 10px;
-    border-radius:  0 0 12px 12px;
+    border-radius: 0 0 12px 12px;
     background-color: #ffffff;
-    box-shadow: 0px -1px 2px 0px rgba(0,0,0,0.08);
-
+    box-shadow: 0px -1px 2px 0px rgba(0, 0, 0, 0.08);
 }
 
-.profile .btn-container button{
+.profile .btn-container button {
     width: 90px;
     border-radius: 8px;
     padding: 7px 12px;
@@ -111,23 +120,56 @@
     font-family: "Open Sans", sans-serif;
 }
 
-.profile .btn-container .cancel{
+.profile .btn-container .cancel {
     border: 1px solid #561FE7;
     background-color: #ffffff;
     color: #561FE7;
 }
 
-.profile .btn-container .save{
+.profile .btn-container .save {
     margin-right: 24px;
     color: #ffffff;
     background-color: #6A39EA;
     border: 1px solid #D0D5DD;
 }
 
-.profile .btn-container .disable{
+.profile .btn-container .disable {
     margin-right: 24px;
     color: #ffffff;
-    background-color: #98A2B3;   
+    background-color: #98A2B3;
     border: 1px solid #D0D5DD;
-    cursor : not-allowed;
+    cursor: not-allowed;
+}
+
+@media screen and (max-width: 1024px) {
+    .profile .form-container {
+        padding: 20px;
+    }
+    .profile .btn-container {
+        padding: 10px; 
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .profile .form-container {
+        padding: 16px;
+    }
+    .profile .btn-container {
+        padding: 8px;
+    }
+}
+
+@media screen and (max-width: 470px) {
+    .profile .myform {
+        padding: 0px 0px;
+    }
+    .profile .form-container {
+        padding: 16px 14px;
+    }
+    .profile .btn-container {
+        padding: 6px;
+    }
+    .profile .head {
+        font-size: 24px;
+    }
 }

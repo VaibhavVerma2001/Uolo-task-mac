@@ -14,7 +14,8 @@ function Profile() {
 
     const [errors, setErrors] = useState({}); // for validation errors
     const [modalShow, setModalShow] = useState(false); // to show success popup
-    const [serverError, setServerError] = useState(false);
+    const [serverError, setServerError] = useState(false); // to handle exception from server
+    const [emailExistsError, setEmailExistsError] = useState(false); // to handle email already exists error
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,24 +27,29 @@ function Profile() {
                     name: values.name,
                     email: values.email
                 });
-
                 if (res.data.success) {
                     // show success modal
                     setModalShow(true);
-                }
 
-                // make states Null after submitting data
-                setValues({
-                    name: "",
-                    email: "",
-                    password: "",
-                    cpassword: ""
-                });
-                setErrors({});
+                    // make states Null after submitting data
+                    setValues({
+                        name: "",
+                        email: "",
+                        password: "",
+                        cpassword: ""
+                    });
+                    setErrors({});
+                    setEmailExistsError(false); // clear email error
+                }
             }
         } catch (error) {
-            setServerError(true);
-            console.log(error);
+            if (error.response && error.response.data && error.response.data.error === "Email already exists") {
+                setEmailExistsError(true);
+            }
+            else {
+                setServerError(true);
+                console.log(error);
+            }
         }
     }
 
@@ -58,6 +64,7 @@ function Profile() {
             password: "",
             cpassword: ""
         });
+        setEmailExistsError(false);
         setErrors({});
     }
 
@@ -111,7 +118,7 @@ function Profile() {
             {!serverError ? (
                 <>
                     <span className="head">Create Profile</span>
-                    <form>
+                    <form className='myform'>
                         <div className="form-container">
                             <span>Upload Photo<span className="red">*</span></span>
                             <span className='msg'>Upload a passport size photo</span>
@@ -148,6 +155,7 @@ function Profile() {
                         </div>
 
                         <div className="btn-container">
+                            {emailExistsError && <span className='error-text'>This email already exists.</span> }
                             <button className="cancel" onClick={handleCancel}>Cancel</button>
                             <button type='submit' className={`${isDisable() ? 'disable' : 'save'}`} disabled={isDisable()} onClick={handleSubmit}>Save</button>
                         </div>

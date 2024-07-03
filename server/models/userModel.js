@@ -3,12 +3,12 @@ require('dotenv').config();
 
 
 mongoose.set('strictQuery', false);
-const url = "mongodb+srv://vaibhav_verma:Vaibhav2001@cluster0.2dazz.mongodb.net/Uolo-task?retryWrites=true&w=majority&appName=Cluster0";
+const url = process.env.MONGO_URL;
 
 // Connect with database
 mongoose.connect(url)
     .then(function () {
-        console.log('Successfully connected to Database User Schema ...');
+        console.log('Successfully connected to Database User Schema...');
     })
     .catch(function (err) {
         console.log(err);
