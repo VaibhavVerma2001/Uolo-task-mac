@@ -1,29 +1,38 @@
 .success-modal{
     display: flex;
-    justify-content: center;
-    align-items: center; 
-    border-radius: 100px;
-}
-
-.success-modal .img-con{
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 210px;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background: rgb(0.2, 0.2, 0.2, 0.5);
 }
 
-.success-modal .img-con span{
+.success-modal .modal-content{
+    background-color: #ffffff;;
+    width: 400px;
+    height: 224px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 16px;
+}
+
+.success-modal .modal-content img{
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.success-modal .modal-content span{
     font-family: "Outfit", sans-serif;
     font-weight: 400;
-    font-size: 22px;
-    margin-top: 20px;
+    font-size: 18px;
     line-height: 27.72px;
     letter-spacing: 0.15px;
-    color: #404040;
-}
-
-.success-modal img{
-    width: 100px;
+    color : #404040;
 }

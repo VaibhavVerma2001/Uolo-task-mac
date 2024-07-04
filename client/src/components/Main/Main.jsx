@@ -8,6 +8,8 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Loading from '../Loading/Loading';
 import Empty from '../Empty/Empty';
 import ServerError from '../ServerError/ServerError';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Main() {
 
@@ -23,6 +25,7 @@ function Main() {
 
   // Fetch Users
   const fetchData = async () => {
+    console.log("Fetching data...");
     try {
       setLoading(true);
       const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`);
@@ -48,14 +51,28 @@ function Main() {
   // Delete specific user
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`${host}/api/user/${userId}`);
+      const res = await axios.delete(`${host}/api/user/${userId}`);
 
-      // fetch data again after deleting to handle pagination etc
-      await fetchData();
+      if (res.data.success) {
+        // fetch data again after deleting to handle pagination etc
+        await fetchData();
 
-      // console.log(users, users.length);
-      if (page > 1 && users.length === 1) {
-        setPage(page - 1);
+        // console.log(users, users.length);
+        if (page > 1 && users.length === 1) {
+          setPage(page - 1);
+        }
+
+        // show sucess toast
+        toast.success('User deleted successfully!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light"
+        });
       }
     } catch (err) {
       console.log(err);
@@ -85,6 +102,19 @@ function Main() {
 
   return (
     <div className='main'>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{ position: "absolute", top: "75px" }}
+      />
       {!error && loading ? (
         <Loading />
       ) : (
@@ -136,7 +166,7 @@ function Main() {
 
           </>) : (<>
             {/* When there are no records to display */}
-            {error && <ServerError/>}
+            {error && <ServerError />}
             {!error && <Empty />}
           </>)}
         </>

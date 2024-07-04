@@ -1,17 +1,18 @@
-.error-container{
-    height: calc(100vh - 80px);
+
+.server-error {
+    height: 560px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
 
-.error-container img{
+.server-error img{
     width: 400px;
     height: 400px;
 }
 
-.error-container .vert-move {
+.server-error .vert-move {
     -webkit-animation: mover 1.3s infinite  alternate;
     animation: mover 1.3s infinite  alternate;
 }
@@ -25,4 +26,3 @@
     0% { transform: translateY(0); }
     100% { transform: translateY(-40px); }
 }
-
