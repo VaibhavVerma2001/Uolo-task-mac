@@ -35,4 +35,11 @@
     line-height: 27.72px;
     letter-spacing: 0.15px;
     color : #404040;
+    text-align: center;
+}
+
+@media screen and (max-width: 470px) {
+    .success-modal .modal-content{
+        width: 90%;
+    }
 }

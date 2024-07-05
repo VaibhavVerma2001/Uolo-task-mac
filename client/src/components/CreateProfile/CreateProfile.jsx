@@ -118,7 +118,7 @@ function Profile() {
         return IsValid;
     }
 
-    
+
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     }
@@ -135,7 +135,7 @@ function Profile() {
 
                             {file ? (
                                 <>
-                                    <label htmlFor="upload-photo" style={{marginBottom : "0px"}}>
+                                    <label htmlFor="upload-photo" style={{ marginBottom: "0px" }}>
                                         <img src={URL.createObjectURL(file)} alt="Uploaded-img" />
                                     </label>
                                 </>
