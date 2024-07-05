@@ -31,7 +31,7 @@ function Main() {
       const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`);
       // console.log("backend", res.data);
       if (res.data.success) {
-        setUsers(res.data.user);
+        setUsers(res.data.users);
         // console.log(users);
         setTotalPage(Math.ceil(res.data.total / limit));
       }
@@ -45,6 +45,7 @@ function Main() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [page]);
 
 

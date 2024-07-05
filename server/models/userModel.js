@@ -1,40 +1,31 @@
 const mongoose = require("mongoose");
-require('dotenv').config();
-
-
-mongoose.set('strictQuery', false);
-const url = process.env.MONGO_URL;
-
-// Connect with database
-mongoose.connect(url)
-    .then(function () {
-        console.log('Successfully connected to Database User Schema...');
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
-
 
 const userSchema = new mongoose.Schema({
     imgUrl: {
-        type: String,
-        default : "https://winaero.com/blog/wp-content/uploads/2017/12/User-icon-256-blue.png"
+        type: String 
     },
     name : {
-        type : String
+        type : String,
+        required: true
     },
     email : {
         type : String,
-        unique : true
+        unique : true,
+        required: true
+    },
+    imageName : {
+        type : String,
+        required : true
+    },
+    isDeleted : {
+        type : Boolean,
+        default : false
     }
 },
     // to store time by default
     { timestamps: true }
 );
 
-
-
 const User = new mongoose.model("User", userSchema);
-
 
 module.exports = User;

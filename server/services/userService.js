@@ -7,11 +7,11 @@ exports.getAllUsers = async (page, limit) => {
 
         const skipValue = (page - 1) * limit;
 
-        // count total number of documents for adding pages in frontend
-        let total = await User.countDocuments();
+        // count total number of documents whose isDeleted is false for adding pages in frontend
+        let total = await User.countDocuments({isDeleted: false});
 
-        const user = await User.find().limit(limit).skip(skipValue);
-        return { user, total };
+        const users = await User.find({isDeleted : false}).limit(limit).skip(skipValue);
+        return { users, total };
 
     } catch (err) {
         console.log("Error getting all users:", err);
@@ -33,10 +33,14 @@ exports.getUser = async (userId) => {
 
 
 // Add new user
-exports.addUser = async (body) => {
+exports.addUser = async (name,email,imageName) => {
     try {
         // Create a new user instance
-        const newUser = new User(body);
+        const newUser = new User({
+            name,
+            email,
+            imageName
+        });
 
         // Save the new user to the database
         await newUser.save();
@@ -52,8 +56,8 @@ exports.addUser = async (body) => {
 // Delete user
 exports.deleteUser = async (userId) =>{
     try {
-        let deletedUser = await User.findByIdAndDelete(userId);
-        return deletedUser;
+        let user = await User.findById(userId);
+        return user;
     } catch (error) {
         console.log("Error deleting user:", error);
         throw new Error("Something went wrong");

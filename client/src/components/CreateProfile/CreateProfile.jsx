@@ -24,10 +24,15 @@ function Profile() {
         try {
             if (validate()) {
 
+                const formData = new FormData();
+
+                formData.append("image", file);
+                formData.append("name", values.name);
+                formData.append("email", values.email);
+
                 // hit add user api
-                const res = await axios.post("http://localhost:5000/api/user/", {
-                    name: values.name,
-                    email: values.email
+                const res = await axios.post("http://localhost:5000/api/user/", formData, {
+                    headers: { "Content-Type": 'multipart/form-data' }
                 });
 
                 if (res.data.success) {
@@ -43,6 +48,7 @@ function Profile() {
                     });
                     setErrors({});
                     setEmailExistsError(false); // clear email error
+                    setFile(null);
                 }
             }
         } catch (error) {
@@ -69,6 +75,7 @@ function Profile() {
         });
         setEmailExistsError(false);
         setErrors({});
+        setFile(null);
     }
 
     // Disable function -> to disable submit button if all field are not filled
@@ -77,7 +84,8 @@ function Profile() {
             values.name === "" ||
             values.email === "" ||
             values.password === "" ||
-            values.cpassword === ""
+            values.cpassword === "" ||
+            file === null
         );
     }
 
@@ -106,12 +114,11 @@ function Profile() {
             IsValid = false;
             error.cpassword = "Passwords do not match";
         }
-
         setErrors(error);
         return IsValid;
     }
 
-    // handle onchange
+    
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     }
@@ -128,13 +135,13 @@ function Profile() {
 
                             {file ? (
                                 <>
-                                    <label htmlFor="upload-photo" className="upload-label">
+                                    <label htmlFor="upload-photo" style={{marginBottom : "0px"}}>
                                         <img src={URL.createObjectURL(file)} alt="Uploaded-img" />
                                     </label>
                                 </>
                             ) : (
                                 <>
-                                    <label htmlFor="upload-photo" className="upload-label">
+                                    <label htmlFor="upload-photo">
                                         <svg width="148" height="148" viewBox="0 0 148 148" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M74 148C114.869 148 148 114.869 148 74C148 33.1309 114.869 0 74 0C33.1309 0 0 33.1309 0 74C0 114.869 33.1309 148 74 148Z" fill="#FFF8E7" />
                                             <path d="M74.2126 125.849C98.5566 125.849 118.291 106.107 118.291 81.7547C118.291 57.4022 98.5566 37.6606 74.2126 37.6606C49.8685 37.6606 30.1338 57.4022 30.1338 81.7547C30.1338 106.107 49.8685 125.849 74.2126 125.849Z" fill="#FF8F66" />
