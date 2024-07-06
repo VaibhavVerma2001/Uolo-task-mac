@@ -2,36 +2,10 @@ var users = require("../contant/userData");
 const User = require("../models/userModel");
 const mongoose = require("mongoose");
 const userService = require("../services/userService");
-const crypto = require("crypto"); //to generate a unique file name
 const sharp = require('sharp'); // to resize the image
-
-const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { getSignedUrlForObject, uploadImage, deleteImage } = require("../utils/s3Client");
 
 require('dotenv').config();
-
-
-
-// default 32 bytes
-const randomImageName = (bytes = 32) => {
-    return crypto.randomBytes(bytes).toString('hex');
-}
-
-const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
-const accessKey = process.env.ACCESS_KEY;
-const secretAccessKey = process.env.SECRET_ACCESS_KEY;
-
-
-// create new s3 object
-const s3 = new S3Client({
-    credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey
-    },
-    region: bucketRegion
-});
 
 
 // Get all users on that Page
@@ -52,13 +26,7 @@ const getAllUsers = async (req, res) => {
 
         // get signed url for all images in the post
         for (const user of users) {
-            const getObjectParams = {
-                Bucket: bucketName,
-                Key: user.imageName
-            };
-
-            const command = new GetObjectCommand(getObjectParams);
-            const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+            const url = await getSignedUrlForObject(user.imageName);
             user.imgUrl = url;
         }
 
@@ -83,15 +51,10 @@ const getUser = async (req, res) => {
 
         const foundUser = await userService.getUser(userId);
 
-        // get signed url for all images in the post
-        const getObjectParams = {
-            Bucket: bucketName,
-            Key: foundUser.imageName
-        };
-
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        // Get signed URL for image
+        const url = await getSignedUrlForObject(foundUser.imageName);
         foundUser.imgUrl = url;
+
 
         if (!foundUser) {
             console.log("No user found with given Id!");
@@ -147,18 +110,8 @@ const addUser = async (req, res) => {
         // resize the image -> height and width given in css
         const buffer = await sharp(req.file.buffer).resize({ height: 250, width: 268, fit: "cover" }).toBuffer();
 
-        const imageName = randomImageName();
-
-        const params = {
-            Bucket: bucketName,
-            Key: imageName,
-            Body: buffer,
-            ContentType: req.file.mimetype
-        }
-        const command = new PutObjectCommand(params);
-
-        // this is asynchronous so await
-        await s3.send(command);
+        // Upload image to S3 bucket
+        const imageName = await uploadImage(buffer, req.file.mimetype);
 
         const newUser = await userService.addUser(name, email, imageName);
 
@@ -189,13 +142,8 @@ const deleteUser = async (req, res) => {
             return res.status(400).json({ success: false, msg: "No user found with given userId." });
         }
 
-        // delete image from s3 bucket
-        const params = {
-            Bucket: bucketName,
-            Key: user.imageName
-        }
-        const command = new DeleteObjectCommand(params);
-        await s3.send(command);
+        // Delete image from S3 bucket
+        await deleteImage(user.imageName);
 
         await User.findByIdAndUpdate(userId,{isDeleted : true});
 

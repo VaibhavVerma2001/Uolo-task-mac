@@ -1,13 +1,7 @@
 const router = require("express").Router();
 var users = require("../contant/userData");
 const {getAllUsers, getUser, addUser, deleteUser} = require("../controller/userController");
-const multer= require("multer");
-
-
-
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = require("../middleware/multer.js");
 
 // Get all users
 router.get("/", getAllUsers);

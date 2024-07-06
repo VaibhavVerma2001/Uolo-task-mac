@@ -170,6 +170,7 @@ function Profile() {
                             <label htmlFor="email">Email-ID<span className="red">*</span></label>
                             <input type="text" id='email' name='email' value={values.email} placeholder='Enter email' onChange={handleChange} />
                             {errors.email && <span className='error-text'>{errors.email}</span>}
+                            {emailExistsError && <span className='error-text'>This email already exists.</span>}
 
                             <label htmlFor="password">Password<span className="red">*</span></label>
                             <input type="password" id='password' name='password' value={values.password} placeholder='Enter password' onChange={handleChange} />
@@ -181,10 +182,10 @@ function Profile() {
                         </div>
 
                         <div className="btn-container">
-                            {emailExistsError && <span className='error-text'>This email already exists.</span>}
                             <button className="cancel" onClick={handleCancel}>Cancel</button>
                             <button type='submit' className={`${isDisable() ? 'disable' : 'save'}`} disabled={isDisable()} onClick={handleSubmit}>Save</button>
                         </div>
+                        
                     </form>
 
                     {showModal && <SuccessModal message={"User has been successfully created"} setShowModal={setShowModal} />}
