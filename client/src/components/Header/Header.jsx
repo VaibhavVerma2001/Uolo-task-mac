@@ -7,8 +7,10 @@ import { Link } from 'react-router-dom';
 import Popover from '@mui/material/Popover';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
+import SuccessModal from '../SuccessModal/SuccessModal';
 
 function Header() {
+    const [showModal, setShowModal] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -29,6 +31,7 @@ function Header() {
                 </div>
             </Link>
 
+
             <div className="right">
                 <img src={Img2} alt="" />
                 <div className="inner">
@@ -45,10 +48,11 @@ function Header() {
                         horizontal: 'left',
                     }}
                 >
-                    <Typography sx={{ p: 1 }}>Logout</Typography>
+                    <Typography sx={{ p: 1, cursor : "pointer", }} onClick = {()=> setShowModal(true)}>Logout</Typography>
                 </Popover>
 
             </div>
+            {showModal && <SuccessModal message={"You have been successfully logout"} setShowModal={setShowModal} />}
         </div>
     )
 }

@@ -106,6 +106,7 @@ const addUser = async (req, res) => {
         // console.log("req.body is : ",req.body);
         // console.log("req.file is : ", req.file);
         // console.log(req.file.buffer); //  this is the actual image we need to upload on s3
+        // console.log(req.file.mimetype); format of the file
 
         // resize the image -> height and width given in css
         const buffer = await sharp(req.file.buffer).resize({ height: 250, width: 268, fit: "cover" }).toBuffer();
@@ -138,7 +139,7 @@ const deleteUser = async (req, res) => {
 
         let user = await userService.deleteUser(userId);
 
-        if (!user) {
+        if (user.isDeleted ) {
             return res.status(400).json({ success: false, msg: "No user found with given userId." });
         }
 
