@@ -28,4 +28,11 @@ const userSchema = new mongoose.Schema({
 
 const User = new mongoose.model("User", userSchema);
 
-module.exports = User;
+module. exports = {
+    User,
+    insert : ({insertDict}) => new User(insertDict).save(),
+    find : ({query}) => User.find(query),
+    findOne : ({query}) => User.findOne(query),
+    updateOne : ({query, updateDict}) => User.updateOne(query,updateDict),
+    updateMany : ({query, updateDict}) => User.updateMany(query,updateDict)
+}

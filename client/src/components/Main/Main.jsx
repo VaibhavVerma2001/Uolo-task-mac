@@ -52,7 +52,7 @@ function Main() {
   // Delete specific user
   const handleDelete = async (userId) => {
     try {
-      const res = await axios.delete(`${host}/api/user/${userId}`);
+      const res = await axios.put(`${host}/api/user/${userId}`);
 
       if (res.data.success) {
         // fetch data again after deleting to handle pagination etc

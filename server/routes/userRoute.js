@@ -1,6 +1,6 @@
 const router = require("express").Router();
 var users = require("../contant/userData");
-const {getAllUsers, getUser, addUser, deleteUser} = require("../controller/userController");
+const {getAllUsers, getUser, addUser, deleteUser} = require("../controller/user");
 const upload = require("../middleware/multer.js");
 
 // Get all users
@@ -13,7 +13,7 @@ router.get("/:userId", getUser);
 router.post("/",upload.single("image") ,addUser);
 
 // delete user with specific Id
-router.delete("/:userId", deleteUser);
+router.put("/:userId", deleteUser);
 
 
 module.exports = router;

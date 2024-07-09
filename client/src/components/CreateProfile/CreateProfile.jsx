@@ -31,11 +31,15 @@ function Profile() {
                 formData.append("email", values.email);
 
                 // hit add user api
+                // const response = await fetch("http://localhost:5000/api/user/", { method: "POST", body: formData });
+                // const data = await response.json();
+                // console.log(data);
                 const res = await axios.post("http://localhost:5000/api/user/", formData, {
-                    headers: { "Content-Type": 'multipart/form-data' }
+                    headers: { 'Content-Type': 'multipart/form-data' }
                 });
+                const data = res.data;
 
-                if (res.data.success) {
+                if (data.success) {
                     // show success modal
                     setShowModal(true);
 
@@ -52,12 +56,11 @@ function Profile() {
                 }
             }
         } catch (error) {
+            console.log("Error in handleSubmit:", error);
             if (error.response && error.response.data && error.response.data.error === "Email already exists") {
                 setEmailExistsError(true);
-            }
-            else {
+            } else {
                 setServerError(true);
-                console.log(error);
             }
         }
     }
@@ -129,7 +132,7 @@ function Profile() {
             {!serverError ? (
                 <>
                     <span className="head">Create Profile</span>
-                    <form className='myform'>
+                    <form className='myform' encType="multipart/form-data">
                         <div className="form-container">
                             <span>Upload Photo<span className="red">*</span></span>
                             <span className='msg'>Upload a passport size photo</span>
@@ -186,7 +189,7 @@ function Profile() {
                             <button className="cancel" onClick={handleCancel}>Cancel</button>
                             <button type='submit' className={`${isDisable() ? 'disable' : 'save'}`} disabled={isDisable()} onClick={handleSubmit}>Save</button>
                         </div>
-                        
+
                     </form>
 
                     {showModal && <SuccessModal message={"User has been successfully created"} setShowModal={setShowModal} />}
