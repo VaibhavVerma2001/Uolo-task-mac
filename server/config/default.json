@@ -1,0 +1,8 @@
+{
+    "s3": {
+        "bucketName": "process.env.BUCKET_NAME",
+        "bucketRegion": "process.env.BUCKET_REGION",
+        "accessKey": "process.env.ACCESS_KEY",
+        "secretAccessKey": "process.env.SECRET_ACCESS_KEY"
+    }
+}

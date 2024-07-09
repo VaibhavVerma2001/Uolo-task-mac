@@ -74,8 +74,6 @@ const addUser = async (req, res) => {
             return res.status(400).json({ success: false, error: "Invalid Email." });
         }
 
-        console.log(email, req.file);
-
         if (!req.file) {
             console.log("Image is required");
             return res.status(400).json({ success: false, error: "Image is required." });
@@ -89,8 +87,6 @@ const addUser = async (req, res) => {
 
 
         const result = await userService.addUser(name, email, req.file);
-
-        console.log(result); 
 
         if (!result.ok) {
             return res.status(400).json({ success: false, error: result.error });

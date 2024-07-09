@@ -9,17 +9,18 @@ const getAllUsers = async (page, limit) => {
         const skipValue = (page - 1) * limit;
 
         // count total number of documents whose isDeleted is false for adding pages in frontend
-        let total = await User.countDocuments({ isDeleted: false });
+        const total = await User.countDocuments({ isDeleted: false });
 
         const users = await User.find({ isDeleted: false }).limit(limit).skip(skipValue);
 
         // get signed url for all images in the post
-        for (const user of users) {
+        const usersWithUrls = await Promise.all(users.map(async (user) => {
             const url = await getSignedUrlForObject(user.imageName);
             user.imgUrl = url;
-        }
+            return user;
+        }));
 
-        return { ok: true, data: { users, total } };
+        return { ok: true, data: { users : usersWithUrls, total } };
 
     } catch (err) {
         console.log("Error getting all users:", err);
@@ -84,9 +85,14 @@ const deleteUser = async (userId) => {
         }
 
         // Delete image from S3 bucket
-        await deleteImage(user.imageName);
+        
+        // await deleteImage(user.imageName);
+        // await User.updateOne({_id : userId} ,{ isDeleted: true });
 
-        await User.findByIdAndUpdate(userId, { isDeleted: true });
+        await Promise.all([
+            deleteImage(user.imageName),
+            User.updateOne({ _id: userId }, { isDeleted: true })
+        ]);
         return { ok: true, data: user };
     } catch (error) {
         console.log("Error deleting user:", error);
