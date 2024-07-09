@@ -4,10 +4,8 @@ const crypto = require("crypto"); //to generate a unique file name
 require('dotenv').config();
 const config = require('config');
 
-// const bucketName = process.env.BUCKET_NAME;
-// const bucketRegion = process.env.BUCKET_REGION;
-// const accessKey = process.env.ACCESS_KEY;
-// const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+
+// Use config objects
 const s3Config = config.get('s3');
 
 const bucketName = s3Config.bucketName;
@@ -15,7 +13,6 @@ const bucketRegion = s3Config.bucketRegion;
 const accessKey = s3Config.accessKey;
 const secretAccessKey = s3Config.secretAccessKey;
 
-console.log("in client" ,bucketName);
 
 // Generate default image name, by default 32 bytes
 const randomImageName = (bytes = 32) => {
@@ -35,7 +32,6 @@ const s3 = new S3Client({
 
 // Get signed URL for an S3 object
 const getSignedUrlForObject = async (key) => {
-    console.log("in client" ,bucketName);
     const getObjectParams = {
         Bucket: bucketName,
         Key: key

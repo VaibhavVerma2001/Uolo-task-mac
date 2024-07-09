@@ -1,0 +1,8 @@
+{
+    "s3": {
+        "bucketName": "BUCKET_NAME",
+        "bucketRegion": "BUCKET_REGION",
+        "accessKey": "ACCESS_KEY",
+        "secretAccessKey": "SECRET_ACCESS_KEY"
+    }
+}
