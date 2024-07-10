@@ -4,5 +4,6 @@
         "bucketRegion": "BUCKET_REGION",
         "accessKey": "ACCESS_KEY",
         "secretAccessKey": "SECRET_ACCESS_KEY"
-    }
+    },
+    "mongo_url" : "MONGO_URL"
 }

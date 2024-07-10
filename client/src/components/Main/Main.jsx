@@ -29,11 +29,10 @@ function Main() {
     try {
       setLoading(true);
       const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`);
-      // console.log("backend", res.data);
+      // console.log(res.data);
       if (res.data.success) {
-        setUsers(res.data.users);
-        // console.log(users);
-        setTotalPage(Math.ceil(res.data.total / limit));
+        setUsers(res.data.data.users);
+        setTotalPage(Math.ceil(res.data.data.total / limit));
       }
       setLoading(false);
     } catch (err) {

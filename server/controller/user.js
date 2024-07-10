@@ -1,36 +1,37 @@
 const userService = require("../services/user");
 const { isValidEmail, isValidObjectId, isNullOrUndefined } = require(("../utils/inputValidation"));
 require('dotenv').config();
+const config = require('config');
 
 
 // Get all users on that Page
 const getAllUsers = async (req, res) => {
     try {
         let { limit, page } = req.query;
-        limit = parseInt(limit) || 8;
+        limit = parseInt(limit) || config.get('limit');
         page = parseInt(page);
 
         // Handle invalid or missing page parameter
         if (isNaN(page) || page < 1) {
-            return res.status(400).json({ success: false, error: "Invalid page" });
+            return res.invalid({ msg: "Invalid page" });
         }
         if (limit < 1) {
-            return res.status(400).json({ success: false, error: "Invalid limit" });
+            return res.invalid({ msg: "Invalid limit" });
         }
 
         const result = await userService.getAllUsers(page, limit);
 
         if (!result.ok) {
-            return res.status(500).json({ success: false, error: result.error });
+            return res.failure({ msg: result.error });
         }
 
         const { users, total } = result.data;
 
-        return res.status(200).json({ success: true, users, total });
+        return res.success({ data: { users, total } });
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: "Something Went Wrong!", error: err });
+        res.failure({ msg: "Something Went Wrong!" });
     }
 };
 
@@ -41,22 +42,22 @@ const getUser = async (req, res) => {
         const { userId } = req.params;
 
         if (!isValidObjectId(userId)) {
-            return res.status(400).json({ success: false, msg: "Invalid User Id" });
+            return res.invalid({ msg: "Invalid User Id" });
         }
 
         const result = await userService.getUser(userId);
 
         if (!result.ok) {
-            console.log(result.error);
-            return res.status(500).json({ success: false, error: result.error });
+            return res.failure({ msg: result.error });
         }
 
         const foundUser = result.data;
 
-        return res.status(200).json({ success: true, foundUser });
+        return res.success({ data: { foundUser } });
     } catch (err) {
-        res.status(500).json({ msg: "Something Went Wrong!", error: err })
         console.log(err);
+        res.failure({ msg: "Something Went Wrong!" });
+        
     }
 };
 
@@ -66,17 +67,15 @@ const addUser = async (req, res) => {
     try {
         const { name, email } = req.body;
         if (isNullOrUndefined(name) || isNullOrUndefined(email)) {
-            console.log("Name and Email are required.")
-            return res.status(206).json({ success: false, error: "Name and Email are required." })
+            return res.invalid({ msg: "Name and Email are required." });
         }
 
         if (!isValidEmail(email)) {
-            return res.status(400).json({ success: false, error: "Invalid Email." });
+            return res.invalid({ msg: "Invalid Email." });
         }
 
         if (!req.file) {
-            console.log("Image is required");
-            return res.status(400).json({ success: false, error: "Image is required." });
+            return res.invalid({ msg: "Image is required." });
         }
 
         // Add image to S3 bucket
@@ -89,17 +88,17 @@ const addUser = async (req, res) => {
         const result = await userService.addUser(name, email, req.file);
 
         if (!result.ok) {
-            return res.status(400).json({ success: false, error: result.error });
+            return res.failure({ msg: result.error });
         }
 
         const newUser = result.data;
 
         console.log("New User Added.");
-        res.status(201).json({ success: true, newUser });
+        res.success({ data: { newUser } });
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ success: false, msg: "Something Went Wrong!", error: error.message });
+        res.failure({ msg: "Something Went Wrong!" });
     }
 };
 
@@ -111,21 +110,21 @@ const deleteUser = async (req, res) => {
         const { userId } = req.params;
 
         if (!isValidObjectId(userId)) {
-            return res.status(400).json({ success: false, msg: "Invalid User Id" });
+            return res.invalid({ msg: "Invalid User Id" });
         }
 
         const result = await userService.deleteUser(userId);
 
         if (!result.ok) {
-            return res.status(500).json({ success: false, error: result.error });
+            return res.failure({ msg: result.error });
         }
 
         console.log("User Deleted.");
-        res.status(200).json({ success: true, msg: `User with id :${userId}, deleted successfully!` });
+        res.success({ data: { msg: `User with id :${userId}, deleted successfully!` } });
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: "Something Went Wrong!", error: err });
+        res.failure({ msg: "Something Went Wrong!" });
     }
 };
 

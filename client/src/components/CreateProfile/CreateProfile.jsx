@@ -53,15 +53,13 @@ function Profile() {
                     setErrors({});
                     setEmailExistsError(false); // clear email error
                     setFile(null);
+                }else{
+                    setEmailExistsError(true);
                 }
             }
         } catch (error) {
             console.log("Error in handleSubmit:", error);
-            if (error.response && error.response.data && error.response.data.error === "Email already exists") {
-                setEmailExistsError(true);
-            } else {
-                setServerError(true);
-            }
+            setServerError(true);
         }
     }
 

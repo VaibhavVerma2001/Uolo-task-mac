@@ -4,5 +4,7 @@
         "bucketRegion": "",
         "accessKey": "",
         "secretAccessKey": ""
-    }
+    },
+    "mongo_url" : "",
+    "limit" : 8
 }
