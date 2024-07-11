@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../static/server_error.png'
+import img from '../../../static/server_error.png'
 import './serverError.css';
 
 function ServerError() {

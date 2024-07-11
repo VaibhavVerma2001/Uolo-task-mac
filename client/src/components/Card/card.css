@@ -62,3 +62,29 @@
     font-size: 18px;
     font-weight: 400;
 }
+
+
+@media screen and (max-width: 556px) {
+    .my-card {
+        width: 220px;
+    }
+}
+
+@media screen and (max-width: 469px) {
+    .my-card {
+        width: 190px;
+    }
+}
+
+@media screen and (max-width: 409px) {
+    .my-card {
+        width: 170px;
+    }
+}
+
+
+@media screen and (max-width: 390px) {
+    .my-card {
+        width: 270px;
+    }
+}

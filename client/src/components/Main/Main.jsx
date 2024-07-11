@@ -5,9 +5,9 @@ import searchImg from '../../static/search.png';
 import Card from '../Card/Card';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import Loading from '../Loading/Loading';
+import Loading from '../shared/Loading/Loading';
 import Empty from '../Empty/Empty';
-import ServerError from '../ServerError/ServerError';
+import ServerError from '../shared/ServerError/ServerError';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

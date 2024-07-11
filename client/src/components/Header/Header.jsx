@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Popover from '@mui/material/Popover';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import SuccessModal from '../SuccessModal/SuccessModal';
+import SuccessModal from '../shared/SuccessModal/SuccessModal';
 
 function Header() {
     const [showModal, setShowModal] = useState(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../static/success.gif';
+import img from '../../../static/success.gif';
 import './successmodal.css';
 
 function SuccessModal({setShowModal,message}) {

@@ -5,8 +5,6 @@ const userRoute = require("./routes/userRoute");
 const db = require("./models/db");
 const responseMiddleware  = require("./middleware/response");
 
-
-
 const app = express();
 
 // middlewares
@@ -24,6 +22,7 @@ app.get('/', (req, res) => {
 
 
 app.use("/api/user", userRoute);
+
 
 
 const port = process.env.PORT || 5000;

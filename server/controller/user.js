@@ -53,21 +53,25 @@ const getUser = async (req, res) => {
 
         const foundUser = result.data;
 
-        return res.success({ data: { foundUser } });
+        return res.success({ data: foundUser });
     } catch (err) {
         console.log(err);
         res.failure({ msg: "Something Went Wrong!" });
-        
+
     }
 };
 
 
-// Add new user
+// Add new user -> register
 const addUser = async (req, res) => {
     try {
-        const { name, email } = req.body;
+        const { name, email, password, cpassword } = req.body;
         if (isNullOrUndefined(name) || isNullOrUndefined(email)) {
             return res.invalid({ msg: "Name and Email are required." });
+        }
+
+        if (isNullOrUndefined(password) || isNullOrUndefined(cpassword)) {
+            return res.invalid({ msg: "Password and Confirm password are required." });
         }
 
         if (!isValidEmail(email)) {
@@ -78,6 +82,11 @@ const addUser = async (req, res) => {
             return res.invalid({ msg: "Image is required." });
         }
 
+        if (password !== cpassword) {
+            return res.invalid({ msg: "Passwords do not match." });
+        }
+
+
         // Add image to S3 bucket
         // console.log("req.body is : ",req.body);
         // console.log("req.file is : ", req.file);
@@ -85,7 +94,7 @@ const addUser = async (req, res) => {
         // console.log(req.file.mimetype); format of the file
 
 
-        const result = await userService.addUser(name, email, req.file);
+        const result = await userService.addUser(name, email, req.file, password);
 
         if (!result.ok) {
             return res.failure({ msg: result.error });
@@ -94,14 +103,13 @@ const addUser = async (req, res) => {
         const newUser = result.data;
 
         console.log("New User Added.");
-        res.success({ data: { newUser } });
+        res.success({ data: newUser });
 
     } catch (error) {
         console.log(error.message);
         res.failure({ msg: "Something Went Wrong!" });
     }
 };
-
 
 
 // Delete user
@@ -120,7 +128,7 @@ const deleteUser = async (req, res) => {
         }
 
         console.log("User Deleted.");
-        res.success({ data: { msg: `User with id :${userId}, deleted successfully!` } });
+        res.success({ data: `User with id :${userId}, deleted successfully!` });
 
     } catch (err) {
         console.log(err);
@@ -128,9 +136,44 @@ const deleteUser = async (req, res) => {
     }
 };
 
+
+
+// Login user
+const userLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (isNullOrUndefined(password) || isNullOrUndefined(email)) {
+            return res.invalid({ msg: "Email and Password are required." });
+        }
+
+        if (!isValidEmail(email)) {
+            return res.invalid({ msg: "Invalid Email." });
+        }
+
+        const result = await userService.userLogin(email, password);
+
+        if (!result.ok) {
+            return res.failure({ msg: result.error });
+        }
+
+        const user = result.data;
+
+        console.log("Logged in successfully.");
+        res.success({ data: user });
+
+    } catch (err) {
+        console.log(err);
+        res.failure({ msg: "Something went wrong!" });
+    }
+}
+
+
+
 module.exports = {
     getAllUsers,
     getUser,
     addUser,
-    deleteUser
+    deleteUser,
+    userLogin
 };

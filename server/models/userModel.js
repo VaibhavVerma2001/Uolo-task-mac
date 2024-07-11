@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     isDeleted : {
         type : Boolean,
         default : false
+    },
+    password : {
+        type : String,
+        required : true
     }
 },
     // to store time by default
