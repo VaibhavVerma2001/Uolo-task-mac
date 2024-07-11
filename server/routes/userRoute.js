@@ -1,8 +1,6 @@
 const router = require("express").Router();
-var users = require("../contant/userData");
 const {getAllUsers, getUser, addUser, deleteUser, userLogin} = require("../controller/user");
 const upload = require("../middleware/multer.js");
-const {client, indexExists, createIndex} = require('../utils/elasticSearch.js');
 
 
 
