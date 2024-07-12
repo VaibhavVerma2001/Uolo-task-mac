@@ -94,7 +94,7 @@ function Profile() {
         let error = {};
         let IsValid = true;
 
-        if (values.name.length < 3) {
+        if (values.name.trim().length < 3) {
             IsValid = false;
             error.name = "Name must contain at least 3 letters.";
         }

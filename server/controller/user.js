@@ -70,6 +70,10 @@ const addUser = async (req, res) => {
             return res.invalid({ msg: "Name and Email are required." });
         }
 
+        if(name.trim().length < 3 ){
+            return res.invalid({ msg: "Name must contain atleast 3 chars." });
+        }
+
         if (isNullOrUndefined(password) || isNullOrUndefined(cpassword)) {
             return res.invalid({ msg: "Password and Confirm password are required." });
         }

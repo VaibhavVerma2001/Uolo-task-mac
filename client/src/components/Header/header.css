@@ -53,3 +53,11 @@
     height: 18px;
     cursor: pointer;
 }
+
+.header .logout-dropdown{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    background-color: #ff0a0a;
+}

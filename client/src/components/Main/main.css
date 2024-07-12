@@ -149,6 +149,11 @@
     color: #ffffff;
 }
 
+@media screen and (max-width: 1200px) {
+    .main {
+      flex : 80%;
+    }
+}
 
 @media screen and (max-width: 993px) {
     .main .search {

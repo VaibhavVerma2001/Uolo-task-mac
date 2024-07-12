@@ -137,7 +137,7 @@ const userLogin = async (email, userPassword) => {
         const user = await User.findOne({ email: email });
 
         if (!user || user.isDeleted) {
-            return { ok: false, error: "User not found or deleted" };
+            return { ok: false, error: "User not found or has been deleted." };
         }
 
         //compare entered password with that found user hashed password

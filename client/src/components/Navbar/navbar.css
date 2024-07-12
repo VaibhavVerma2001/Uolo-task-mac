@@ -49,8 +49,14 @@
 }
 
 
-@media screen and (max-width: 993px) {
+@media screen and (max-width: 850px) {
     .side-navbar {
       display: none;
     }
-  }
+}
+
+@media screen and (max-width: 1200px) {
+    .side-navbar {
+      flex : 20%;
+    }
+}

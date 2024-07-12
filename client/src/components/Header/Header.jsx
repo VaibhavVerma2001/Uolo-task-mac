@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import './header.css';
 import logo from '../../static/image1.png';
 import Img2 from '../../static/image2.png';
@@ -8,10 +8,15 @@ import Popover from '@mui/material/Popover';
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import SuccessModal from '../shared/SuccessModal/SuccessModal';
+import UserContext from '../../context/UserContext';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function Header() {
     const [showModal, setShowModal] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const context = useContext(UserContext);
+    const {setUser} = context;
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -20,6 +25,19 @@ function Header() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogOut = () => {
+        setAnchorEl(null);
+        setShowModal(true);
+        // after 2.5 seconds delete use from local storage and navigate to login
+        setTimeout(() => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("accessToken");
+            setUser(null);
+            setShowModal(false);
+        }, 2500);
+
+    }
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
@@ -48,7 +66,7 @@ function Header() {
                         horizontal: 'left',
                     }}
                 >
-                    <Typography sx={{ p: 1, cursor : "pointer", }} onClick = {()=> setShowModal(true)}>Logout</Typography>
+                    <Typography sx={{ p: 1, cursor: "pointer", }} onClick={() => handleLogOut()}> <LogoutIcon/> Logout</Typography>
                 </Popover>
 
             </div>
