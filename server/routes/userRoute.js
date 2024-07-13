@@ -1,15 +1,16 @@
 const router = require("express").Router();
 const {getAllUsers, getUser, addUser, deleteUser, userLogin} = require("../controller/user");
 const upload = require("../middleware/multer.js");
+const verify = require("../middleware/verifyToken");
 
 
 
 
-// Get all users
-router.get("/", getAllUsers);
+// Get all users -> protected route
+router.get("/",verify, getAllUsers);
 
-// Get particular user by his id
-router.get("/:userId", getUser);
+// Get particular user by his id -> protected route
+router.get("/:userId",verify, getUser);
 
 // Add new user -> register
 router.post("/",upload.single("image") ,addUser);
@@ -17,8 +18,8 @@ router.post("/",upload.single("image") ,addUser);
 // Login user
 router.post("/login", userLogin);
 
-// delete user with specific Id
-router.put("/:userId", deleteUser);
+// delete user with specific Id -> protected route
+router.put("/:userId",verify ,deleteUser);
 
 
 module.exports = router;

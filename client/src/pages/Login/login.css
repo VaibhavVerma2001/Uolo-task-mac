@@ -1,135 +1,129 @@
-.login{
+.login {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    width: 100%;
-    padding: 0 100px;
-    gap: 10px;
+    padding: 0 8.25rem;
+    gap: 2.5rem;
 }
 
-
-.login .left{
-    flex : 50%;
+.login .left {
+    flex: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 600px;
-    width: 500px;
+    height: 38.5rem;
+    width: 31.25rem;
 }
 
-.login .left img{
-    width: 80%;
+.login .left img {
+    width: 85%;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 0.75rem;
 }
 
-.login .right{
-    flex: 50%;
+.login .right {
+    flex: 40%;
 }
 
-.login .right .container{
-    height: 550px;
-    width: 65%;
+.login .right .container {
+    height: 34.375rem;
+    width: 75%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
 }
 
-.login .right .container img{
-    width: 140px;
-    height: 50px;
-    margin-bottom: 24px;
+.login .right .container img {
+    width: 8.75rem;
+    height: 3.125rem;
+    margin-bottom: 1.5rem;
 }
 
-.login .right .container .head{
-    font-size: 40px;
+.login .right .container .head {
+    font-size: 2.5rem;
     font-weight: 700;
-    line-height: 60.48px;
-    letter-spacing: 0.25px;
+    line-height: 3.78rem;
+    letter-spacing: 0.015625rem;
     font-family: "Outfit", sans-serif;
     color: #101828;
-    margin-top: 24px;
+    margin-top: 1.5rem;
 }
 
-.login .right .container .msg{
-    font-size: 14px;
+.login .right .container .msg {
+    font-size: 0.875rem;
     font-weight: 400;
-    line-height: 19.07px;
+    line-height: 1.19125rem;
     font-family: "Open Sans", sans-serif;
     color: #3F3F3F;
     opacity: 0.6;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
 }
 
-
-.login .right hr{
-    width: 140px;
+.login .right hr {
+    width: 8.75rem;
     border-top: 1px solid #000000;
     opacity: 0.2;
 }
 
-.login .right .container .myForm{
+.login .right .container .myForm {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-
-.login .right .container .myForm label{
+.login .right .container .myForm label {
     font-family: "Open Sans", sans-serif;
     font-weight: 500;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 0.15px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    letter-spacing: 0.009375rem;
     color: #000000;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 }
 
-.login .right .container .myForm input{
-    /* width: 100%; */
-    height: 40px;
-    border-radius: 8px;
+.login .right .container .myForm input {
+    height: 2.5rem;
+    border-radius: 0.5rem;
     outline: none;
-    border: 1px solid#E4E4E4;
-    padding: 0 12px;
-    margin-bottom: 30px;
+    border: 1px solid #E4E4E4;
+    padding: 0 0.75rem;
+    margin-bottom: 1.875rem;
     color: #667085;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 1rem;
+    line-height: 1.5rem;
 }
 
-.login .right .container .myForm input::placeholder{
+.login .right .container .myForm input::placeholder {
     color: #667085;
-    font-size: 15px;
-    line-height: 24px;
+    font-size: 0.9375rem;
+    line-height: 1.5rem;
 }
 
-.login .right .container .myForm input:focus{
+.login .right .container .myForm input:focus {
     border: 1px solid #5B35DA !important;
 }
 
-
-.login .right .container .myForm .login-btn{
+.login .right .container .myForm .login-btn {
     font-family: "Open Sans", sans-serif;
     background-color: #5B35DA;
     color: #ffffff;
-    border-radius: 8px;
-    height: 40px;
+    border-radius: 0.5rem;
+    height: 2.5rem;
     width: 100%;
     border: none;
     font-weight: 600;
-    font-size: 15px;
-    line-height: 20.43px;
-    letter-spacing: 0.45px;
+    font-size: 0.9375rem;
+    line-height: 1.276875rem;
+    letter-spacing: 0.028125rem;
     cursor: pointer;
 }
 
 .login .error-text {
     color: red;
-    font-size: 15px;
-    margin-top: 10px;
+    font-size: 0.9375rem;
+    margin-top: 0.625rem;
 }
 
 @media screen and (max-width: 1200px) {

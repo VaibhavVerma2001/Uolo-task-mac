@@ -28,11 +28,18 @@ function Main() {
     console.log("Fetching data...");
     try {
       setLoading(true);
-      const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`);
-      // console.log(res.data);
+      const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`, {
+        headers: {
+          token: "bearer " + localStorage.getItem('accessToken'),
+        }
+      });
+      console.log(res.data);
       if (res.data.success) {
         setUsers(res.data.data.users);
         setTotalPage(Math.ceil(res.data.data.total / limit));
+      }
+      else{
+        console.log("success if false");
       }
       setLoading(false);
     } catch (err) {
