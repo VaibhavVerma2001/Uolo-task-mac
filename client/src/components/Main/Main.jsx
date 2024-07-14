@@ -74,7 +74,7 @@ function Main() {
   // Delete specific user
   const handleDelete = async (userId) => {
     try {
-      const res = await axios.put(`${host}/api/user/${userId}`,{}, {
+      const res = await axios.put(`${host}/api/user/${userId}`, {}, {
         headers: {
           token: "bearer " + localStorage.getItem('accessToken'),
         }
@@ -114,6 +114,18 @@ function Main() {
             setUser(null);
             setShowModal(false);
           }, 2500);
+        }
+        else if (res.data.err === "Error in updating document in elastic") {
+          toast.error('Failed to delete user!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"
+          });
         }
       }
 

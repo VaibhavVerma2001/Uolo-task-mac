@@ -4,6 +4,7 @@ const sharp = require('sharp'); // to resize the image
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { addDocument, updateDocument, searchDocuments } = require("../utils/elasticSearch");
+const { startSession } = require('mongoose');
 
 
 // Get all users on that Page
@@ -104,11 +105,11 @@ const addUser = async (name, email, file, userPassword) => {
 
         const result = await addDocument("my_new_index", { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
 
-
-        if(!result.ok){
+        if (!result.ok) {
             // Rollback from mongoDB
-            User.findByIdAndDelete(user._id);
-            return {ok : false, error: result.error};
+            console.log("Rolling back")
+            await User.findByIdAndDelete(user._id);
+            return { ok: false, error: result.error };
         }
 
         return { ok: true, data: { ...info } };
@@ -131,16 +132,17 @@ const deleteUser = async (userId) => {
         // Delete image from S3 bucket
 
         await Promise.all([
-            deleteImage(user.imageName),
+            // deleteImage(user.imageName), -> not deleting so that in rollback it reamin there
             User.updateOne({ _id: userId }, { isDeleted: true })
         ]);
 
-        const response = await updateDocument("my_new_index",user._id);
+        const response = await updateDocument("my_new_index", user._id);
 
-
-        if(!response.ok){
-            // Rollback from mongoDB
-            return { ok : false, error : response.error};
+        if (!response.ok) {
+            // Rollback from mongoDB -> make it non deleted
+            console.log("Rollback in delete");
+            await User.updateOne({ _id: userId }, { isDeleted: false })
+            return { ok: false, error: response.error };
         }
 
         return { ok: true, data: user };

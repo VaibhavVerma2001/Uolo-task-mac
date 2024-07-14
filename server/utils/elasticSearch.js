@@ -153,14 +153,14 @@ async function searchDocuments(indexName, q) {
 }
 
 // Example usage of searchDocuments
-searchDocuments("my_new_index", "eli").then((response) => {
-    if (response.ok) {
-        console.log(response.data.foundusers, response.data.total);
-    }
-    else {
-        console.log(response.error)
-    }
-});
+// searchDocuments("my_new_index", "eli").then((response) => {
+//     if (response.ok) {
+//         console.log(response.data.foundusers, response.data.total);
+//     }
+//     else {
+//         console.log(response.error)
+//     }
+// });
 
 module.exports = {
     client,

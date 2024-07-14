@@ -5,6 +5,8 @@ import axios from 'axios';
 import ServerError from '../shared/ServerError/ServerError';
 import uploadSVG from '../../static/upload-pic.svg';
 import UserContext from '../../context/UserContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Profile() {
 
@@ -79,10 +81,24 @@ function Profile() {
                             setShowModal(false);
                         }, 2500);
                     }
+
+                    // error in adding elastic search
+                    else if (res.data.err === "Error in adding document in elastic") {
+                        toast.error('Error in adding user!', {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light"
+                        });
+                    }
                 }
             }
         } catch (error) {
-            console.log("Error in handleSubmit:", error);
+            console.log(error);
             setServerError(true);
         }
     }
@@ -159,6 +175,19 @@ function Profile() {
 
     return (
         <div className='profile'>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                style={{ position: "absolute", top: "75px" }}
+            />
             {!serverError ? (
                 <>
                     <span className="head">Create Profile</span>
