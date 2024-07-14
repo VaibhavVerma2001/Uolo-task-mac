@@ -2,7 +2,7 @@
     height: 72px;
     display: flex;
     align-items: center;
-    box-shadow: 0px 4px 4px 0px rgb(0, 0, 0,0.05);
+    box-shadow: 0px 4px 4px 0px rgb(0, 0, 0, 0.05);
     position: relative;
     background-color: #FFFFFF;
     z-index: 2;
@@ -27,19 +27,44 @@
     justify-content: center;
 }
 
-.header .right .inner{
+.header .right .logout {
+    position: absolute;
+    top: 60px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #f6f6f6;
+    padding: 16px 8px;
+    gap: 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e2e2;
+    height: 50px;
+    width: 200px;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.05);
+    font-family: Open Sans;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19.07px;
+    letter-spacing: 0.44999998807907104px;
+    color: #344054;
+    cursor: pointer;
+
+}
+
+.header .right .inner {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
 
-.header .right img{
+.header .right img {
     height: 40px;
     width: 40px;
 }
 
-.header .right .text{
+.header .right .text {
     font-family: 'Open Sans';
     font-size: 18px;
     line-height: 24px;
@@ -47,13 +72,13 @@
     font-weight: 600;
 }
 
-.header .right .arrow{
+.header .right .arrow {
     width: 18px;
     height: 18px;
     cursor: pointer;
 }
 
-.header .logout-dropdown{
+.header .logout-dropdown {
     display: flex;
     align-items: center;
     justify-content: center;

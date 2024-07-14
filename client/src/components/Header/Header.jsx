@@ -1,46 +1,37 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import './header.css';
 import logo from '../../static/image1.png';
 import Img2 from '../../static/image2.png';
 import downArrow from '../../static/downArrow.png';
 import { Link } from 'react-router-dom';
-import Popover from '@mui/material/Popover';
 import { useState } from 'react';
-import Typography from '@mui/material/Typography';
 import SuccessModal from '../shared/SuccessModal/SuccessModal';
 import UserContext from '../../context/UserContext';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 function Header() {
     const [showModal, setShowModal] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [showLogout, setshowLogout] = useState(false);
 
     const context = useContext(UserContext);
-    const {user, setUser} = context;
+    const { user, setUser } = context;
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleClick = () => {
+        setshowLogout(!showLogout);
     };
 
     const handleLogOut = () => {
-        setAnchorEl(null);
         setShowModal(true);
-        // after 2.5 seconds delete use from local storage and navigate to login
+        // after 2 seconds delete use from local storage and navigate to login
         setTimeout(() => {
             localStorage.removeItem("user");
             localStorage.removeItem("accessToken");
             setUser(null);
             setShowModal(false);
-        }, 2500);
+        }, 2000);
 
     }
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
     return (
         <div className='header'>
             <Link to={'/'} className='link'>
@@ -54,20 +45,12 @@ function Header() {
                 <img src={Img2} alt="" />
                 <div className="inner">
                     <span className='text'>{(user.name).split(" ")[0]}</span>
-                    <img className='arrow' src={downArrow} alt="arrow" aria-describedby={id} variant="contained" onClick={handleClick} />
+                    <img className='arrow' src={downArrow} alt="arrow" onClick={handleClick} />
                 </div>
-                <Popover
-                    id={id}
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                >
-                    <Typography sx={{ p: 1, cursor: "pointer", }} onClick={() => handleLogOut()}> <LogoutIcon/> Logout</Typography>
-                </Popover>
+
+                {showLogout && <div className= "logout" onClick={handleLogOut}>
+                    <LogoutIcon /> Logout
+                </div>}
 
             </div>
             {showModal && <SuccessModal message={"You have been successfully logout"} setShowModal={setShowModal} />}

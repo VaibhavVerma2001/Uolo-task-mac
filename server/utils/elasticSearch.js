@@ -1,82 +1,68 @@
 const { Client } = require('@elastic/elasticsearch');
 
+
 const client = new Client({
-    node: 'http://192.168.163.152:9200/' // Ensure this is the correct URL
+    node: 'http://192.168.163.152:9200/'
 });
+
+const settings = {
+    analysis: {
+        filter: {
+            autocomplete_filter: {
+                type: 'edge_ngram',
+                min_gram: 1,
+                max_gram: 20,
+            },
+        },
+        tokenizer: {
+            autocomplete_tokenizer: {
+                type: 'edge_ngram',
+                min_gram: 1,
+                max_gram: 20,
+                token_chars: ['letter', 'digit', 'punctuation', 'symbol'],
+            },
+        },
+        analyzer: {
+            autocomplete: {
+                type: 'custom',
+                tokenizer: 'autocomplete_tokenizer',
+                filter: ['lowercase', 'autocomplete_filter'],
+            },
+            keyword_lowercase: {
+                type: 'custom',
+                tokenizer: 'keyword',
+                filter: ['lowercase'],
+            },
+        },
+    },
+    number_of_shards: 1,
+    number_of_replicas: 1,
+};
+
+const mappings = {
+    properties: {
+        id: { type: 'keyword' },
+        name: {
+            type: 'text',
+            analyzer: 'autocomplete',
+            search_analyzer: 'keyword_lowercase',
+        },
+        email: {
+            type: 'text',
+            analyzer: 'autocomplete',
+            search_analyzer: 'keyword_lowercase',
+        },
+        deleted_at: { type: 'date' },
+    },
+};
 
 async function createIndex(indexName) {
     return client.indices.create({
         index: indexName,
         body: {
-            "settings": {
-                "number_of_shards": 3,
-                "number_of_replicas": 2,
-                "index": {
-                    "refresh_interval": "30s",
-                    "analysis": {
-                        "normalizer": {
-                            "lowercase_normalizer": {
-                                "type": "custom",
-                                "char_filter": [],
-                                "filter": ["lowercase"]
-                            }
-                        },
-                        "analyzer": {
-                            "default": {
-                                "type": "custom",
-                                "tokenizer": "standard",
-                                "filter": ["lowercase"]
-                            },
-                            "anagram_analyzer": {
-                                "type": "custom",
-                                "tokenizer": "standard",
-                                "filter": ["lowercase", "reverse"]
-                            },
-                            "email_analyzer": {
-                                "type": "custom",
-                                "tokenizer": "uax_url_email",
-                                "filter": ["lowercase"]
-                            }
-                        }
-                    }
-                }
-            },
-            "mappings": {
-                "properties": {
-                    "name": {
-                        "type": "text",
-                        "analyzer": "default",
-                        "fields": {
-                            "anagram": {
-                                "type": "text",
-                                "analyzer": "anagram_analyzer"
-                            },
-                            "keyword": {
-                                "type": "keyword",
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
-                    },
-                    "email": {
-                        "type": "text",
-                        "analyzer": "email_analyzer",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "normalizer": "lowercase_normalizer"
-                            }
-                        }
-                    },
-                    "imageName": {
-                        "type": "keyword",
-                        "ignore_above": 256
-                    },
-                    "isDeleted": {
-                        "type": "boolean"
-                    }
-                }
-            }
-        }
+            "settings": settings,
+            "mappings": mappings
+        },
     });
 }
 
@@ -90,11 +76,12 @@ async function indexExists(indexName) {
         console.log("Error in checking index exists ", error);
         return { ok: false, error: "Error in checking index exists" };
     }
+
 }
 
 const document = {
-    name: 'Sarthak gupta',
-    email: 'abc@gmail.com',
+    name: 'Suyash sekhar',
+    email: 'sekar@gmail.com',
     imageName: 'image.jpg',
     isDeleted: false,
 };
@@ -116,7 +103,7 @@ async function addDocument(indexName, document, id) {
     }
 }
 
-// addDocument("my_new_index", document,10);
+// addDocument("my_new_index", document,3);
 
 // Update a document in the index
 async function updateDocument(indexName, id) {
@@ -136,30 +123,20 @@ async function updateDocument(indexName, id) {
 }
 
 // Search documents by name or email using wildcard matching
-async function searchDocuments(indexName, searchTerm) {
+async function searchDocuments(indexName, q) {
     try {
         const response = await client.search({
             index: indexName,
             body: {
                 query: {
                     bool: {
-                        should: [
-                            {
-                                wildcard: {
-                                    'name': {
-                                        value: `*${searchTerm.toLowerCase()}*`
-                                    }
-                                }
-                            },
-                            {
-                                wildcard: {
-                                    'email': {
-                                        value: `*${searchTerm.toLowerCase()}*`
-                                    }
-                                }
-                            }
-                        ]
-                    }
+                        must: q ? [] : { match_all: {} },
+                        should: q ? [{ match: { name: q } }, { match: { email: q } }, { wildcard: { name: `*${q}*` } }, { wildcard: { email: `*${q}*` } }] : undefined,
+                        minimum_should_match: q ? 1 : undefined,
+                        filter: [
+                            { term: { isDeleted: false } }
+                        ],
+                    },
                 }
             }
         });
@@ -176,7 +153,7 @@ async function searchDocuments(indexName, searchTerm) {
 }
 
 // Example usage of searchDocuments
-searchDocuments("my_new_index", "yash").then((response) => {
+searchDocuments("my_new_index", "eli").then((response) => {
     if (response.ok) {
         console.log(response.data.foundusers, response.data.total);
     }

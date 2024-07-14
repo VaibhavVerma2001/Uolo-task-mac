@@ -3,6 +3,8 @@ const { getSignedUrlForObject, uploadImage, deleteImage } = require("../utils/s3
 const sharp = require('sharp'); // to resize the image
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const { addDocument, updateDocument, searchDocuments } = require("../utils/elasticSearch");
+
 
 // Get all users on that Page
 const getAllUsers = async (page, limit) => {
@@ -97,7 +99,17 @@ const addUser = async (name, email, file, userPassword) => {
         });
 
         const user = await insert({ insertDict: newUser });
+
         const { password, ...info } = user._doc; // send all fields except password
+
+        const result = await addDocument("my_new_index", { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
+
+
+        if(!result.ok){
+            // Rollback from mongoDB
+            User.findByIdAndDelete(user._id);
+            return {ok : false, error: result.error};
+        }
 
         return { ok: true, data: { ...info } };
 
@@ -117,13 +129,20 @@ const deleteUser = async (userId) => {
         }
 
         // Delete image from S3 bucket
-        // await deleteImage(user.imageName);
-        // await User.updateOne({_id : userId} ,{ isDeleted: true });
 
         await Promise.all([
             deleteImage(user.imageName),
             User.updateOne({ _id: userId }, { isDeleted: true })
         ]);
+
+        const response = await updateDocument("my_new_index",user._id);
+
+
+        if(!response.ok){
+            // Rollback from mongoDB
+            return { ok : false, error : response.error};
+        }
+
         return { ok: true, data: user };
     } catch (error) {
         console.log("Error deleting user:", error);
