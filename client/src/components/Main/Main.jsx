@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import './main.css';
 import searchImg from '../../static/search.png';
@@ -10,13 +10,20 @@ import Empty from '../Empty/Empty';
 import ServerError from '../shared/ServerError/ServerError';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SuccessModal from '../shared/SuccessModal/SuccessModal';
+import UserContext from '../../context/UserContext';
+
 
 function Main() {
+
+  const context = useContext(UserContext);
+  const { setUser } = context;
 
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [error, setError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const limit = 8;
   const pageNumbers = [...Array(totalPage + 1).keys()].slice(1);
 
@@ -33,13 +40,22 @@ function Main() {
           token: "bearer " + localStorage.getItem('accessToken'),
         }
       });
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data.success) {
         setUsers(res.data.data.users);
         setTotalPage(Math.ceil(res.data.data.total / limit));
       }
-      else{
-        console.log("success if false");
+      else {
+        // when authentication failed or token expired -> send user back to login page
+        if (res.data.err === "You are not authenticated!" || res.data.err === "Token is not valid!") {
+          setShowModal(true);
+          setTimeout(() => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("accessToken");
+            setUser(null);
+            setShowModal(false);
+          }, 2500);
+        }
       }
       setLoading(false);
     } catch (err) {
@@ -58,7 +74,13 @@ function Main() {
   // Delete specific user
   const handleDelete = async (userId) => {
     try {
-      const res = await axios.put(`${host}/api/user/${userId}`);
+      const res = await axios.put(`${host}/api/user/${userId}`,{}, {
+        headers: {
+          token: "bearer " + localStorage.getItem('accessToken'),
+        }
+      });
+
+      console.log(res.data);
 
       if (res.data.success) {
         // fetch data again after deleting to handle pagination etc
@@ -81,6 +103,20 @@ function Main() {
           theme: "light"
         });
       }
+      else {
+        console.log(res.data);
+        // when authentication failed or token expired -> send user back to login page
+        if (res.data.err === "You are not authenticated!" || res.data.err === "Token is not valid!") {
+          setShowModal(true);
+          setTimeout(() => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("accessToken");
+            setUser(null);
+            setShowModal(false);
+          }, 2500);
+        }
+      }
+
     } catch (err) {
       console.log(err);
       setError(true);
@@ -179,6 +215,7 @@ function Main() {
         </>
       )}
 
+      {showModal && <SuccessModal message={"Token Expired, Login again to continue."} />}
 
     </div>
   )

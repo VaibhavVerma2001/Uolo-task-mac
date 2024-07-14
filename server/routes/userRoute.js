@@ -12,8 +12,8 @@ router.get("/",verify, getAllUsers);
 // Get particular user by his id -> protected route
 router.get("/:userId",verify, getUser);
 
-// Add new user -> register
-router.post("/",upload.single("image") ,addUser);
+// Add new user -> register -> protected route
+router.post("/", verify, upload.single("image") ,addUser);
 
 // Login user
 router.post("/login", userLogin);

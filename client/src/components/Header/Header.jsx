@@ -16,7 +16,7 @@ function Header() {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const context = useContext(UserContext);
-    const {setUser} = context;
+    const {user, setUser} = context;
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -53,7 +53,7 @@ function Header() {
             <div className="right">
                 <img src={Img2} alt="" />
                 <div className="inner">
-                    <span className='text'>Vaibhav</span>
+                    <span className='text'>{(user.name).split(" ")[0]}</span>
                     <img className='arrow' src={downArrow} alt="arrow" aria-describedby={id} variant="contained" onClick={handleClick} />
                 </div>
                 <Popover

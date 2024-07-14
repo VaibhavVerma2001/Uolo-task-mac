@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './createprofile.css';
 import SuccessModal from '../shared/SuccessModal/SuccessModal';
 import axios from 'axios';
 import ServerError from '../shared/ServerError/ServerError';
 import uploadSVG from '../../static/upload-pic.svg';
+import UserContext from '../../context/UserContext';
 
 function Profile() {
+
+    const context = useContext(UserContext);
+    const { setUser } = context;
+
     const [values, setValues] = useState({
         name: "",
         email: "",
@@ -17,6 +22,7 @@ function Profile() {
     const [serverError, setServerError] = useState(false); // to handle exception from server
     const [emailExistsError, setEmailExistsError] = useState(false); // to handle email already exists error
     const [showModal, setShowModal] = useState(false); // show sucess modal
+    const [modalMessage, setmodalMessage] = useState(""); // show sucess modal
 
     const [file, setFile] = useState(null);
 
@@ -35,13 +41,17 @@ function Profile() {
                 formData.append("cpassword", values.cpassword);
 
                 const res = await axios.post("http://localhost:5000/api/user/", formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        token: "bearer " + localStorage.getItem('accessToken')
+                    }
                 });
                 const data = res.data;
 
                 if (data.success) {
                     // show success modal
                     setShowModal(true);
+                    setmodalMessage("User has been successfully created");
 
                     // make states Null after submitting data
                     setValues({
@@ -53,8 +63,22 @@ function Profile() {
                     setErrors({});
                     setEmailExistsError(false); // clear email error
                     setFile(null);
-                }else{
-                    setEmailExistsError(true);
+                } else {
+                    console.log(res.data);
+                    if (res.data.err === "Email already exists") {
+                        setEmailExistsError(true);
+                    }
+                    // when authentication failed or token expired -> send user back to login page
+                    if (res.data.err === "You are not authenticated!" || res.data.err === "Token is not valid!") {
+                        setShowModal(true);
+                        setmodalMessage("Token Expired, Login again to continue.")
+                        setTimeout(() => {
+                            localStorage.removeItem("user");
+                            localStorage.removeItem("accessToken");
+                            setUser(null);
+                            setShowModal(false);
+                        }, 2500);
+                    }
                 }
             }
         } catch (error) {
@@ -101,7 +125,7 @@ function Profile() {
 
         let nameRegex = /^[a-zA-Z0-9 ]+$/
 
-        if(!nameRegex.test(values.name)){
+        if (!nameRegex.test(values.name)) {
             IsValid = false;
             error.name = "Name can contain only letters, numbers and spaces.";
         }
@@ -186,7 +210,7 @@ function Profile() {
 
                     </form>
 
-                    {showModal && <SuccessModal message={"User has been successfully created"} setShowModal={setShowModal} />}
+                    {showModal && <SuccessModal message={modalMessage} setShowModal={setShowModal} />}
                 </>
             ) : (
                 <ServerError />
