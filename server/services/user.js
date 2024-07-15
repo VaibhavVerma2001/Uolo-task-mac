@@ -4,7 +4,11 @@ const sharp = require('sharp'); // to resize the image
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { addDocument, updateDocument, searchDocuments } = require("../utils/elasticSearch");
+require('dotenv').config();
+const config = require('config');
 
+
+const indexName = config.get('indexName');
 
 // Get all users on that Page
 const getAllUsers = async (page, limit, query) => {
@@ -12,7 +16,7 @@ const getAllUsers = async (page, limit, query) => {
         if (query) {
             const skipValue = (page - 1) * limit;
             // Use Elasticsearch to search for users based on the query
-            const esResult = await searchDocuments("my_new_index", query);
+            const esResult = await searchDocuments(indexName, query);
 
             if (esResult.ok) {
                 // Extract found users and total count from Elasticsearch response
@@ -135,7 +139,7 @@ const addUser = async (name, email, file, userPassword) => {
         const { password, ...info } = user._doc; // send all fields except password
 
         // add in elastic search
-        const result = await addDocument("my_new_index", { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
+        const result = await addDocument(indexName, { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
 
         if (!result.ok) {
             // Rollback from mongoDB
@@ -164,7 +168,7 @@ const deleteUser = async (userId) => {
         await User.updateOne({ _id: userId }, { isDeleted: true });
 
         // update in elastic search 
-        const response = await updateDocument("my_new_index", user._id);
+        const response = await updateDocument(indexName, user._id);
 
         if (!response.ok) {
             // Rollback from mongoDB -> make it non deleted

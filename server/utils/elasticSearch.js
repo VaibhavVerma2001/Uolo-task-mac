@@ -1,8 +1,10 @@
 const { Client } = require('@elastic/elasticsearch');
+require('dotenv').config();
+const config = require('config');
 
 
 const client = new Client({
-    node: 'http://192.168.163.152:9200/'
+    node: config.get('node')
 });
 
 const settings = {
@@ -52,7 +54,8 @@ const mappings = {
             analyzer: 'autocomplete',
             search_analyzer: 'keyword_lowercase',
         },
-        deleted_at: { type: 'date' },
+        imageName: { type: 'keyword' },
+        isDeleted: { type: 'boolean' }
     },
 };
 

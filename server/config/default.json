@@ -1,3 +1,5 @@
 {
-    "limit" : 8
+    "limit" : 8,
+    "node" : "http://192.168.163.152:9200/",
+    "indexName" : "my_new_index"
 }
