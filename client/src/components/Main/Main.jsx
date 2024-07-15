@@ -87,7 +87,9 @@ function Main() {
 
       if (res.data.success) {
         // fetch data again after deleting to handle pagination etc
-        await fetchData();
+        setTimeout( async ()=>{
+          await fetchData();
+        },1000); // applying timeout bec it takes time for elastic search to delete, so fetch after 1 seconds
 
         // console.log(users, users.length);
         if (page > 1 && users.length === 1) {
