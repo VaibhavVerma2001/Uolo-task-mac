@@ -110,7 +110,7 @@ async function updateDocument(indexName, id) {
     try {
         const response = await client.update({
             index: indexName,
-            id: id,
+            id: id.toString(),
             body: {
                 doc: { isDeleted: true }
             }

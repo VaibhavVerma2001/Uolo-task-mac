@@ -51,9 +51,16 @@
     line-height: 24px;
     border: none;
 }
+
 .main .search input:focus {
     outline: none;
 }
+
+.main .search-box .clear-icon{
+    cursor: pointer;
+}
+
+
 
 .main .btn {
     width: 133px;

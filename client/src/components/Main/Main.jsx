@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SuccessModal from '../shared/SuccessModal/SuccessModal';
 import UserContext from '../../context/UserContext';
+import ClearIcon from '@mui/icons-material/Clear';
 
 
 function Main() {
@@ -24,6 +25,10 @@ function Main() {
   const [totalPage, setTotalPage] = useState(1);
   const [error, setError] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [query, setQuery] = useState("");
+  const [clearIcon, setClearIcon] = useState(""); // to show clear text icon
+
   const limit = 8;
   const pageNumbers = [...Array(totalPage + 1).keys()].slice(1);
 
@@ -35,7 +40,7 @@ function Main() {
     console.log("Fetching data...");
     try {
       setLoading(true);
-      const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}`, {
+      const res = await axios.get(`${host}/api/user?page=${page}&limit=${limit}&query=${query}`, {
         headers: {
           token: "bearer " + localStorage.getItem('accessToken'),
         }
@@ -68,7 +73,7 @@ function Main() {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
-  }, [page]);
+  }, [page, query]);
 
 
   // Delete specific user
@@ -79,8 +84,6 @@ function Main() {
           token: "bearer " + localStorage.getItem('accessToken'),
         }
       });
-
-      console.log(res.data);
 
       if (res.data.success) {
         // fetch data again after deleting to handle pagination etc
@@ -150,6 +153,13 @@ function Main() {
     }
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1); // set page 1 so that if we are searching from any page then search results must show from page 1
+    setQuery(searchText);
+    
+  }
+
   // Function to disable next and previous buttons
   // Disable previous and next buttons
   const disablePrev = page === 1;
@@ -176,15 +186,18 @@ function Main() {
         <>
           <span className="head">Our Team</span>
 
-          <div className="search-box">
-            <div className="search">
-              <img src={searchImg} alt="search-icon" />
-              <input type="text" placeholder='Search by name, or Email id' />
+          <form onSubmit={handleSearch}>
+            <div className="search-box">
 
+              <div className="search">
+                <img src={searchImg} alt="search-icon" />
+                <input type="text" placeholder='Search by name, or Email id' value={searchText} onChange={(e) => setSearchText(e.target.value)} onFocus={() => setClearIcon(true)} />
+                {clearIcon && <ClearIcon className='clear-icon' onClick={() => { setSearchText(""); setClearIcon(false); setQuery("") }} />}
+              </div>
+
+              <button type='submit' className='btn' onClick={() => setClearIcon(false)}>Search</button>
             </div>
-
-            <button className='btn'>Search</button>
-          </div>
+          </form>
 
 
           {/* User cards */}

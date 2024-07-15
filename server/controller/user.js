@@ -7,7 +7,7 @@ const config = require('config');
 // Get all users on that Page
 const getAllUsers = async (req, res) => {
     try {
-        let { limit, page } = req.query;
+        let { limit, page, query } = req.query;
         limit = parseInt(limit) || config.get('limit');
         page = parseInt(page);
 
@@ -19,7 +19,7 @@ const getAllUsers = async (req, res) => {
             return res.invalid({ msg: "Invalid limit" });
         }
 
-        const result = await userService.getAllUsers(page, limit);
+        const result = await userService.getAllUsers(page, limit, query);
 
         if (!result.ok) {
             return res.failure({ msg: result.error });
