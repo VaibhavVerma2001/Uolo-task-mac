@@ -36,7 +36,7 @@
     }
     .error-container .err-text{
         font-size: 1.5rem;
-        bottom: 15rem;
+        bottom: 10rem;
     }
 }
 
@@ -44,7 +44,6 @@
 
     .error-container .err-text{
         font-size: 1.5rem;
-        bottom: 17rem;
     }
 }
 
@@ -55,6 +54,5 @@
 
     .error-container .err-text{
         font-size: 1rem;
-        bottom: 18rem;
     }
 }

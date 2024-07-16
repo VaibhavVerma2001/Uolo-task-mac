@@ -37,7 +37,7 @@ const getSignedUrlForObject = async (key) => {
         Key: key
     };
     const command = new GetObjectCommand(getObjectParams);
-    const url = getSignedUrl(s3, command, { expiresIn: 3600 });
+    const url = getSignedUrl(s3, command, { expiresIn: 36000 });
     return url;
 };
 
