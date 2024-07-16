@@ -1,4 +1,4 @@
-const { User, insert, find, findOne, updateOne, updateMany } = require("../models/userModel");
+const { User, insert, find, findOne, updateOne } = require("../models/userModel");
 const { getSignedUrlForObject, uploadImage, deleteImage } = require("../utils/s3Client");
 const sharp = require('sharp'); // to resize the image
 const bcrypt = require('bcryptjs');
@@ -68,14 +68,20 @@ const getUser = async (userId) => {
 
 // Add new user
 const addUser = async (name, email, file, userPassword) => {
+    const session = await User.startSession();
+    session.startTransaction();
+
     try {
         // Check if email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            console.log("Email already exists.")
+            console.log("Email already exists.");
+            await session.abortTransaction();
+            session.endSession();
             return { ok: false, error: "Email already exists" };
         }
-        // resize the image -> height and width given in css
+
+        // Resize the image -> height and width given in CSS
         const buffer = await sharp(file.buffer).resize({ height: 250, width: 268, fit: "cover" }).toBuffer();
 
         // Upload image to S3 bucket
@@ -91,55 +97,72 @@ const addUser = async (name, email, file, userPassword) => {
             password: hashedPassword
         });
 
-        const user = await insert({ insertDict: newUser });
+        const user = await newUser.save({ session });
 
         const { password, ...info } = user._doc; // send all fields except password
 
-        // add in elastic search
+        // Add in Elasticsearch
         const result = await addDocument(indexName, { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
 
         if (!result.ok) {
-            // Rollback from mongoDB
             console.log("Rolling back");
-            await User.findByIdAndDelete(user._id);
+            await session.abortTransaction();
+            session.endSession();
             return { ok: false, error: result.error };
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         return { ok: true, data: { ...info } };
 
     } catch (error) {
         console.log("Error adding user:", error);
+        await session.abortTransaction();
+        session.endSession();
         return { ok: false, error: "Something went wrong" };
     }
 }
+
 
 
 // Delete user
 const deleteUser = async (userId) => {
+    const session = await User.startSession();
+    session.startTransaction();
+
     try {
-        const user = await findOne({ query: { _id: userId } });
+        const user = await findOne({ query: { _id: userId } }).session(session);
         if (!user || user.isDeleted) {
+            await session.abortTransaction();
+            session.endSession();
             return { ok: false, error: "No user found with given Id" };
         }
 
-        await User.updateOne({ _id: userId }, { isDeleted: true });
+        await User.updateOne({ _id: userId }, { isDeleted: true }, { session });
 
-        // update in elastic search 
-        const response = await updateDocument(indexName, user._id);
+        // Update in Elasticsearch
+        const response = await updateDocument(indexName, user._id.toString());
 
         if (!response.ok) {
-            // Rollback from mongoDB -> make it non deleted
             console.log("Rollback in delete");
-            await User.updateOne({ _id: userId }, { isDeleted: false })
+            await session.abortTransaction();
+            session.endSession();
             return { ok: false, error: response.error };
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         return { ok: true, data: user };
     } catch (error) {
         console.log("Error deleting user:", error);
+        await session.abortTransaction();
+        session.endSession();
         return { ok: false, error: "Something went wrong" };
     }
 }
+
 
 
 const userLogin = async (email, userPassword) => {
