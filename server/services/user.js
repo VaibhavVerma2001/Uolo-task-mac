@@ -13,72 +13,29 @@ const indexName = config.get('indexName');
 // Get all users on that Page
 const getAllUsers = async (page, limit, query) => {
     try {
-        if (query) {
-            const skipValue = (page - 1) * limit;
-            // Use Elasticsearch to search for users based on the query
-            const esResult = await searchDocuments(indexName, query);
+        const skipValue = (page - 1) * limit;
+        // Use Elasticsearch to search for users based on the query
+        const result = await searchDocuments(indexName, query, skipValue);
 
-            if (esResult.ok) {
-                // Extract found users and total count from Elasticsearch response
-                let foundUsers = esResult.data.foundusers
-                    .filter(hit => !hit._source.isDeleted) // Filter out deleted users
-                    .map(hit => ({
-                        _id: hit._id,
-                        ...hit._source
-                    }));
-                const total = esResult.data.total;
-
-                // Slice the results for pagination
-                foundUsers = foundUsers.slice(skipValue, skipValue + limit);
-
-                // Get signed URLs for all images in the result
-                const usersWithUrls = await Promise.all(foundUsers.map(async (user) => {
-                    const url = await getSignedUrlForObject(user.imageName);
-                    user.imgUrl = url;
-                    return user;
+        if (result.ok) {
+            // Extract found users and total count from Elasticsearch response
+            let foundUsers = result.data.foundusers
+                .map(hit => ({
+                    _id: hit._id,
+                    ...hit._source
                 }));
-                
-                return { ok: true, data: { users: usersWithUrls, total } };
-            } else {
-                return { ok: false, error: esResult.error };
-            }
-        }
-        // if no search is provided
-        else {
-            const skipValue = (page - 1) * limit;
+            const total = result.data.total;
 
-            // Define the aggregation pipeline
-            const pipeline = [
-                {
-                    $match: { isDeleted: false }
-                },
-                {
-                    $facet: {
-                        total: [{ $count: "count" }],
-                        users: [
-                            { $skip: skipValue },
-                            { $limit: limit }
-                        ]
-                    }
-                }
-            ];
-
-            // Execute the aggregation
-            const result = await User.aggregate(pipeline);
-
-            // Extract the total count and users
-            const total = result[0].total[0] ? result[0].total[0].count : 0;
-            const users = result[0].users;
-
-
-            // get signed url for all images in the post
-            const usersWithUrls = await Promise.all(users.map(async (user) => {
+            // Get signed URLs for all images in the result
+            const usersWithUrls = await Promise.all(foundUsers.map(async (user) => {
                 const url = await getSignedUrlForObject(user.imageName);
                 user.imgUrl = url;
                 return user;
             }));
 
             return { ok: true, data: { users: usersWithUrls, total } };
+        } else {
+            return { ok: false, error: result.error };
         }
 
     } catch (err) {
@@ -205,7 +162,11 @@ const userLogin = async (email, userPassword) => {
             { expiresIn: "5d" }
         );
 
+        const url = await getSignedUrlForObject(user.imageName);
+        user.imgUrl = url;
+
         const { password, ...info } = user._doc; // send all fields except password
+
         return { ok: true, data: { ...info, accessToken } };
 
     } catch (error) {

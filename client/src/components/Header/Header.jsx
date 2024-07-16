@@ -42,13 +42,13 @@ function Header() {
 
 
             <div className="right">
-                <img src={Img2} alt="" />
+                <img src={user.imgUrl ? user.imgUrl : Img2} alt="profile" />
                 <div className="inner">
                     <span className='text'>{(user.name).split(" ")[0]}</span>
                     <img className='arrow' src={downArrow} alt="arrow" onClick={handleClick} />
                 </div>
 
-                {showLogout && <div className= "logout" onClick={handleLogOut}>
+                {showLogout && <div className="logout" onClick={handleLogOut}>
                     <LogoutIcon /> Logout
                 </div>}
 

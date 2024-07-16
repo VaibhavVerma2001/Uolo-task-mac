@@ -49,14 +49,22 @@
 }
 
 
-@media screen and (max-width: 850px) {
+
+
+@media screen and (max-width: 1245px) {
     .side-navbar {
-      display: none;
+      flex : 20%;
     }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 984px) {
     .side-navbar {
-      flex : 20%;
+      flex : 27%;
+    }
+}
+
+@media screen and (max-width: 786px) {
+    .side-navbar {
+      display: none;
     }
 }

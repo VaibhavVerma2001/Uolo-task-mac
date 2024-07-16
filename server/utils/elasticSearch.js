@@ -82,12 +82,12 @@ async function indexExists(indexName) {
 
 }
 
-const document = {
-    name: 'Suyash sekhar',
-    email: 'sekar@gmail.com',
-    imageName: 'image.jpg',
-    isDeleted: false,
-};
+// const document = {
+//     name: 'Suyash sekhar',
+//     email: 'sekar@gmail.com',
+//     imageName: 'image.jpg',
+//     isDeleted: false,
+// };
 
 // Add a document to the index
 async function addDocument(indexName, document, id) {
@@ -126,24 +126,32 @@ async function updateDocument(indexName, id) {
 }
 
 // Search documents by name or email using wildcard matching
-async function searchDocuments(indexName, q) {
+async function searchDocuments(indexName, q, skipValue) {
     try {
         const response = await client.search({
             index: indexName,
             body: {
+                // add pagination
+                from: skipValue,
+                size: config.get('limit'),
+
                 query: {
                     bool: {
                         must: q ? [] : { match_all: {} },
-                        should: q ? [{ match: { name: q } }, { match: { email: q } }, { wildcard: { name: `*${q}*` } }, { wildcard: { email: `*${q}*` } }] : undefined,
+                        // using operator and so that vaibhav verma dont display when we search vaibhav singh
+                        should: q ? [{ match: { name: { query: q, operator: "and" } } },
+                        { match: { email: { query: q, operator: "and" } } },
+                        { wildcard: { name: `*${q}*` } },
+                        { wildcard: { email: `*${q}*` } }] : undefined,
                         minimum_should_match: q ? 1 : undefined,
                         filter: [
                             { term: { isDeleted: false } }
                         ],
                     },
-                }
+                },
             }
         });
-
+        // console.log(response.body.hits.hits)
         if (response.statusCode === 200) {
             return { ok: true, data: { foundusers: response.body.hits.hits, total: response.body.hits.total.value } };
         }

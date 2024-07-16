@@ -12,7 +12,7 @@ function verify(req, res, next) {
       next();
     });
   } else {
-    return res.invalid({ msg: "Token is not valid!" });;
+    return res.invalid({ msg: "Token is not valid!" });
   }
 }
 

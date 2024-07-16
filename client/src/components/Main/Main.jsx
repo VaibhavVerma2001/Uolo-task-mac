@@ -61,6 +61,18 @@ function Main() {
             setShowModal(false);
           }, 2500);
         }
+        else if (res.data.err === "Error in searching documents in elastic") {
+          toast.error('Failed to fetch data from elastic serach!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"
+          });
+        }
       }
       setLoading(false);
     } catch (err) {
@@ -87,26 +99,28 @@ function Main() {
 
       if (res.data.success) {
         // fetch data again after deleting to handle pagination etc
-        setTimeout( async ()=>{
+        setTimeout(async () => {
           await fetchData();
-        },1000); // applying timeout bec it takes time for elastic search to delete, so fetch after 1 seconds
 
-        // console.log(users, users.length);
-        if (page > 1 && users.length === 1) {
-          setPage(page - 1);
-        }
+          // console.log(users, users.length);
+          if (page > 1 && users.length === 1) {
+            setPage(page - 1);
+          }
 
-        // show sucess toast
-        toast.success('User deleted successfully!', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light"
-        });
+          // show sucess toast
+          toast.success('User deleted successfully!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"
+          });
+        }, 1000); // applying timeout bec it takes time for elastic search to delete, so fetch after 1 seconds
+
+
       }
       else {
         console.log(res.data);
@@ -159,7 +173,7 @@ function Main() {
     e.preventDefault();
     setPage(1); // set page 1 so that if we are searching from any page then search results must show from page 1
     setQuery(searchText);
-    
+
   }
 
   // Function to disable next and previous buttons

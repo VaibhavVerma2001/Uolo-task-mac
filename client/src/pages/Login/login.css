@@ -71,6 +71,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    position: relative;
 }
 
 .login .right .container .myForm label {
@@ -124,6 +125,8 @@
     color: red;
     font-size: 0.9375rem;
     margin-top: 0.625rem;
+    position: absolute;
+    top: 15rem;
 }
 
 @media screen and (max-width: 1200px) {
@@ -131,3 +134,56 @@
         padding: 0;
     }
 }
+
+
+@media screen and (max-width: 876px) {
+    .login .left img{
+        width: 90%;
+    }
+
+    .login .right .container{
+        width: 90%;
+    }
+}
+
+
+@media screen and (max-width: 650px) {
+    .login .left{
+        display: none;
+    }
+
+    .login .right .container{
+        width: 70%;
+        margin: auto;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .login .right .container{
+        width: 80%;
+        margin: auto;
+    }
+}
+
+@media screen and (max-width: 420px){
+    .login .right .container{
+        width: 85%;
+        margin: auto;
+    }
+}
+
+@media screen and (max-width: 346px){
+    .login .right .container{
+        width: 100%;
+        padding: 0 24px;
+    }
+
+    .login .right .container .head{
+        font-size: 2.2rem;
+    }
+
+    .login .right .container .msg{
+        font-size: 0.7rem;
+    }
+}
+
