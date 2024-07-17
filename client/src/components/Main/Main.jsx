@@ -62,7 +62,7 @@ function Main() {
           }, 2500);
         }
         else if (res.data.err === "Error in searching documents in elastic") {
-          toast.error('Failed to fetch data from elastic serach!', {
+          toast.error('Failed to fetch data from elastic search!', {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,

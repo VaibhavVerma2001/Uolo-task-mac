@@ -194,7 +194,7 @@ const userLogin = async (email, userPassword) => {
         const accessToken = jwt.sign(
             { id: user._id },
             process.env.SECRET_KEY,
-            { expiresIn: "2d" }
+            { expiresIn: "5h" }
         );
 
         const url = await getSignedUrlForObject(user.imageName);

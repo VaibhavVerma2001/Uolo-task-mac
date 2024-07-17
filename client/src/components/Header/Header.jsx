@@ -16,10 +16,6 @@ function Header() {
     const context = useContext(UserContext);
     const { user, setUser } = context;
 
-    const handleClick = () => {
-        setshowLogout(!showLogout);
-    };
-
     const handleLogOut = () => {
         setShowModal(true);
         // after 2 seconds delete use from local storage and navigate to login
@@ -44,8 +40,8 @@ function Header() {
             <div className="right">
                 <img src={user.imgUrl ? user.imgUrl : Img2} alt="profile" />
                 <div className="inner">
-                    <span className='text'>{(user.name).split(" ")[0]}</span>
-                    <img className='arrow' src={downArrow} alt="arrow" onClick={handleClick} />
+                    <span className='text' onClick={() => setshowLogout(false)} >{(user.name).split(" ")[0]}</span>
+                    <img className='arrow' src={downArrow} alt="arrow" onClick={() => setshowLogout(!showLogout)} />
                 </div>
 
                 {showLogout && <div className="logout" onClick={handleLogOut}>
