@@ -21,21 +21,20 @@
 /* So that when we hover card, icon become visible */
 .my-card:hover .icon{
     display: hidden;
-    color: rgb(255, 0, 0);
+    color: grey;
     border-radius: 50%;
-    border: 1px solid red;
+    border: 1px solid grey;
 }
 
 
 .my-card .icon{
     position: absolute;
     right : 0px;
-    top : -13px;
+    top : 0px;
     cursor: pointer;
     color: transparent;
     transition: all 0.2s ease-in;
     font-size: 30px;
-    
 }
 
 .my-card img{

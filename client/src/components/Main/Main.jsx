@@ -171,8 +171,26 @@ function Main() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setPage(1); // set page 1 so that if we are searching from any page then search results must show from page 1
-    setQuery(searchText);
+
+    // dont allow to search for invalid chars
+    let searchregex = /^[a-zA-Z0-9.@ ]+$/
+
+    if (!searchregex.test(searchText)) {
+      toast.warning('Only letters, number, . , @ and " " allowed!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+      });
+    }
+    else {
+      setPage(1); // set page 1 so that if we are searching from any page then search results must show from page 1
+      setQuery(searchText);
+    }
 
   }
 

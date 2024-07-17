@@ -3,7 +3,7 @@ const { getSignedUrlForObject, uploadImage, deleteImage } = require("../utils/s3
 const sharp = require('sharp'); // to resize the image
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-const { addDocument, updateDocument, searchDocuments } = require("../utils/elasticSearch");
+const { addToElastic, updateElastic, searchFromElastic } = require("../utils/elasticSearch");
 require('dotenv').config();
 const config = require('config');
 
@@ -15,7 +15,7 @@ const getAllUsers = async (page, limit, query) => {
     try {
         const skipValue = (page - 1) * limit;
         // Use Elasticsearch to search for users based on the query
-        const result = await searchDocuments(indexName, query, skipValue);
+        const result = await searchFromElastic(indexName, query, skipValue);
 
         if (result.ok) {
             // Extract found users and total count from Elasticsearch response
@@ -74,7 +74,8 @@ const addUser = async (name, email, file, userPassword) => {
     try {
         // Check if email already exists
         const existingUser = await User.findOne({ email });
-        if (existingUser) {
+
+        if (existingUser && !existingUser.isDeleted) {
             console.log("Email already exists.");
             await session.abortTransaction();
             session.endSession();
@@ -90,19 +91,30 @@ const addUser = async (name, email, file, userPassword) => {
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(userPassword, salt);
-        const newUser = new User({
-            name,
-            email,
-            imageName,
-            password: hashedPassword
-        });
 
-        const user = await newUser.save({ session });
+        let user;
+        if (existingUser && existingUser.isDeleted) {
+            // Update the existing user
+            existingUser.name = name;
+            existingUser.imageName = imageName;
+            existingUser.password = hashedPassword;
+            existingUser.isDeleted = false;
+            user = await existingUser.save({ session });
+        } else {
+            // Create a new user
+            const newUser = new User({
+                name,
+                email,
+                imageName,
+                password: hashedPassword
+            });
+            user = await newUser.save({ session });
+        }
 
         const { password, ...info } = user._doc; // send all fields except password
 
-        // Add in Elasticsearch
-        const result = await addDocument(indexName, { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
+        // Add or update in Elasticsearch
+        const result = await addToElastic(indexName, { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
 
         if (!result.ok) {
             console.log("Rolling back");
@@ -142,7 +154,7 @@ const deleteUser = async (userId) => {
         await User.updateOne({ _id: userId }, { isDeleted: true }, { session });
 
         // Update in Elasticsearch
-        const response = await updateDocument(indexName, user._id.toString());
+        const response = await updateElastic(indexName, user._id.toString());
 
         if (!response.ok) {
             console.log("Rollback in delete");
@@ -182,7 +194,7 @@ const userLogin = async (email, userPassword) => {
         const accessToken = jwt.sign(
             { id: user._id },
             process.env.SECRET_KEY,
-            { expiresIn: "5d" }
+            { expiresIn: "2d" }
         );
 
         const url = await getSignedUrlForObject(user.imageName);

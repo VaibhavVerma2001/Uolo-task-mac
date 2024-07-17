@@ -90,7 +90,7 @@ async function indexExists(indexName) {
 // };
 
 // Add a document to the index
-async function addDocument(indexName, document, id) {
+async function addToElastic(indexName, document, id) {
     try {
         const response = await client.index({
             index: indexName,
@@ -108,8 +108,8 @@ async function addDocument(indexName, document, id) {
 
 // addDocument("my_new_index", document,3);
 
-// Update a document in the index
-async function updateDocument(indexName, id) {
+// Update a document in the index -> make isDeleted to true
+async function updateElastic(indexName, id) {
     try {
         const response = await client.update({
             index: indexName,
@@ -126,7 +126,7 @@ async function updateDocument(indexName, id) {
 }
 
 // Search documents by name or email using wildcard matching
-async function searchDocuments(indexName, q, skipValue) {
+async function searchFromElastic(indexName, q, skipValue) {
     try {
         const response = await client.search({
             index: indexName,
@@ -176,8 +176,8 @@ async function searchDocuments(indexName, q, skipValue) {
 module.exports = {
     client,
     indexExists,
-    addDocument,
+    addToElastic,
     createIndex,
-    updateDocument,
-    searchDocuments
+    updateElastic,
+    searchFromElastic
 };
