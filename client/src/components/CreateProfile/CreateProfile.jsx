@@ -212,7 +212,7 @@ function Profile() {
                             )}
 
                             {/* For Image */}
-                            <input type="file" id="upload-photo" name="upload-photo" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])} />
+                            <input type="file" accept="image/x-png,image/gif,image/jpeg" id="upload-photo" name="upload-photo" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])} />
 
                             <label htmlFor="name">Name<span className="red">*</span></label>
                             <input type="text" id='name' name='name' value={values.name} placeholder='Enter full name' onChange={handleChange} />

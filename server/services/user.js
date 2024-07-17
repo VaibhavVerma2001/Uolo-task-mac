@@ -117,7 +117,7 @@ const addUser = async (name, email, file, userPassword) => {
         const result = await addToElastic(indexName, { name: user.name, email: user.email, imageName: user.imageName, isDeleted: user.isDeleted }, user._id.toString());
 
         if (!result.ok) {
-            console.log("Rolling back");
+            // console.log("Rolling back");
             await session.abortTransaction();
             session.endSession();
             return { ok: false, error: result.error };
@@ -157,7 +157,7 @@ const deleteUser = async (userId) => {
         const response = await updateElastic(indexName, user._id.toString());
 
         if (!response.ok) {
-            console.log("Rollback in delete");
+            // console.log("Rollback in delete");
             await session.abortTransaction();
             session.endSession();
             return { ok: false, error: response.error };

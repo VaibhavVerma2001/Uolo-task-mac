@@ -45,6 +45,8 @@ const getUser = async (req, res) => {
             return res.invalid({ msg: "Invalid User Id" });
         }
 
+
+
         const result = await userService.getUser(userId);
 
         if (!result.ok) {
@@ -70,7 +72,7 @@ const addUser = async (req, res) => {
             return res.invalid({ msg: "Name and Email are required." });
         }
 
-        if(name.trim().length < 3 ){
+        if (name.trim().length < 3) {
             return res.invalid({ msg: "Name must contain atleast 3 chars." });
         }
 
@@ -90,6 +92,9 @@ const addUser = async (req, res) => {
             return res.invalid({ msg: "Passwords do not match." });
         }
 
+        if (!req.file.mimetype.startsWith("image/")) {
+            return res.invalid({ msg: "File must be of image type." });
+        }
 
         // Add image to S3 bucket
         // console.log("req.body is : ",req.body);
@@ -106,7 +111,6 @@ const addUser = async (req, res) => {
 
         const newUser = result.data;
 
-        console.log("New User Added.");
         res.success({ data: newUser });
 
     } catch (error) {
@@ -131,7 +135,6 @@ const deleteUser = async (req, res) => {
             return res.failure({ msg: result.error });
         }
 
-        console.log("User Deleted.");
         res.success({ data: `User with id :${userId}, deleted successfully!` });
 
     } catch (err) {
@@ -163,7 +166,6 @@ const userLogin = async (req, res) => {
 
         const user = result.data;
 
-        console.log("Logged in successfully.");
         res.success({ data: user });
 
     } catch (err) {
