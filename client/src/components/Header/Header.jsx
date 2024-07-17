@@ -8,13 +8,14 @@ import { useState } from 'react';
 import SuccessModal from '../shared/SuccessModal/SuccessModal';
 import UserContext from '../../context/UserContext';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function Header() {
     const [showModal, setShowModal] = useState(false);
     const [showLogout, setshowLogout] = useState(false);
 
     const context = useContext(UserContext);
-    const { user, setUser } = context;
+    const { user, setUser, toggle, setToggle } = context;
 
     const handleLogOut = () => {
         setShowModal(true);
@@ -29,7 +30,9 @@ function Header() {
     }
 
     return (
-        <div className='header'>
+        <div className='header' onClick={() => setToggle(!toggle)}>
+            <MenuIcon className='menu-icon'/>
+
             <Link to={'/'} className='link'>
                 <div className="left">
                     <img src={logo} alt="logo-img" />

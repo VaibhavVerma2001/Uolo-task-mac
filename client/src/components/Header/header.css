@@ -87,3 +87,21 @@
     width: 100px;
     background-color: #ff0a0a;
 }
+
+.header .menu-icon{
+    display: none;
+}
+
+@media screen and (max-width: 786px){
+    .header .menu-icon{
+        display: block;
+        margin-left: 20px;
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 556px){
+    .header .right .inner{
+        display: none;
+    }
+}

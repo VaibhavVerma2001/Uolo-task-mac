@@ -55,6 +55,7 @@
 }
 
 .my-card .email {
+    font-family: "Outfit", sans-serif;
     font-size: 1.125rem;
     font-weight: 400;
 }
@@ -77,6 +78,19 @@
     .my-card img {
         height: 180px;
     }
+
+    .my-card p {
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 20px;
+        letter-spacing: 0.15px;
+    }
+
+    .my-card .email {
+        font-size: 1rem;
+        line-height: 20px;
+        letter-spacing: 0.15px;
+    }
 }
 
 @media screen and (max-width: 410px) {
@@ -92,7 +106,7 @@
 
 @media screen and (max-width: 360px) {
     .my-card {
-        width: 150px;
+        width: 148px;
     }
 
     .my-card img {
@@ -100,7 +114,7 @@
     }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 318px) {
     .my-card {
         width: 260px;
     }

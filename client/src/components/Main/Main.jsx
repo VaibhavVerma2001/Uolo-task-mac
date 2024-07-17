@@ -274,7 +274,7 @@ function Main() {
         </>
       )}
 
-      {showModal && <SuccessModal message={"Token Expired, Login again to continue."} />}
+      {showModal && <SuccessModal message={"Token Expired, Login again to continue."} setShowModal = {setShowModal}/>}
 
     </div>
   )

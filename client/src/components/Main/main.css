@@ -19,7 +19,7 @@
     color: #101828;
 }
 
-.main .search-box{
+.main .search-box {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,26 +56,26 @@
     outline: none;
 }
 
-.main .search-box .clear-icon{
+.main .search-box .clear-icon {
     cursor: pointer;
 }
 
 
 
-.main .btn {
+.main .search-box .btn {
     width: 133px;
     height: 48px;
     border-radius: 0 8px 8px 0;
     padding: 13px, 40px, 13px, 40px;
     color: #101828;
-    font-weight:  600 ;
+    font-weight: 600;
     font-size: 16px;
     line-height: 21.79px;
     border: 1px solid #D0D5DD;
     cursor: pointer;
 }
 
-.main .card-container{
+.main .card-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -84,7 +84,7 @@
 }
 
 
-.main .empty{
+.main .empty {
     min-height: 400px;
     display: flex;
     align-items: center;
@@ -92,7 +92,7 @@
     flex-direction: column;
 }
 
-.main .empty span{
+.main .empty span {
     margin-top: 10px;
     font-family: "Outfit", sans-serif;
     font-optical-sizing: auto;
@@ -104,19 +104,19 @@
     color: #55575c;
 }
 
-.main .empty img{
+.main .empty img {
     width: 260px;
     height: 250px;
 }
 
-.main .btn-container{
+.main .btn-container {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
 }
 
-.main .btn-container .page-item{
+.main .btn-container .page-item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,23 +128,23 @@
     cursor: pointer;
 }
 
-.main .btn-container .active-page-item{
+.main .btn-container .active-page-item {
     background-color: #561FE7;
     color: #ffffff;
     border: none;
     height: 28px;
 }
 
-.main .btn-container .arrow-icon{
+.main .btn-container .arrow-icon {
     font-size: 16px;
 }
 
-.main .btn-container .disabled-arrow{
+.main .btn-container .disabled-arrow {
     color: rgb(163, 161, 161);
     cursor: not-allowed;
 }
 
-.main .btn-container .page-num{
+.main .btn-container .page-num {
     color: #333333;
     font-size: 13px;
     font-family: "Open Sans", sans-serif;
@@ -152,13 +152,15 @@
     font-weight: 500;
 }
 
-.main .btn-container .active-page-num{
+.main .btn-container .active-page-num {
     color: #ffffff;
 }
 
+
+
 @media screen and (max-width: 1200px) {
     .main {
-      flex : 80%;
+        flex: 80%;
     }
 }
 
@@ -176,21 +178,24 @@
 
 @media screen and (max-width: 556px) {
     .main .search {
-        width: 60%;
+        width: 68%;
     }
 
-    .main{
+    .main {
         padding: 0 5px;
     }
 
-    .main .card-container{
+    .main .card-container {
         gap: 10px;
     }
 
+    .main .search-box .btn {
+        width: 85px;
+    }
 }
 
-@media screen and (max-width: 556px) {
+@media screen and (max-width: 320px){
     .main .search {
-        width: 50%;
+        width: 60%;
     }
 }
