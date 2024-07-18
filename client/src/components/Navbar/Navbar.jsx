@@ -80,7 +80,7 @@ function Navbar() {
                             </div>
                         </Link>
 
-                        <div className="logout" onClick={handleLogOut}>
+                        <div className="logout" onClick={() => {handleLogOut(); setToggle(false)}}>
                             <LogoutIcon /> Logout
                         </div>
 

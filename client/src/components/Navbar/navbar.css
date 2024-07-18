@@ -72,6 +72,8 @@
     z-index: 1000;
     display: flex;
     flex-direction: column;
+    /* transform: translateX(-100px);
+    transition: transform 3s ease-in-out; */
 }
 
 .toggle-sidebar .sidebar-container .close-icon {
