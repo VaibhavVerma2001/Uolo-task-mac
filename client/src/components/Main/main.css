@@ -156,13 +156,30 @@
     color: #ffffff;
 }
 
+@media screen and (max-width: 1331px) {
+    .main .search {
+        width: 65%;
+    }
+}
+
 
 
 @media screen and (max-width: 1200px) {
     .main {
         flex: 80%;
     }
+
+    .main .search {
+        width: 75%;
+    }
 }
+
+@media screen and (max-width: 1054px) {
+    .main .search {
+        width: 50%;
+    }
+}
+
 
 @media screen and (max-width: 993px) {
     .main .search {
@@ -172,13 +189,26 @@
 
 @media screen and (max-width: 844px) {
     .main .search {
+        width: 65%;
+    }
+}
+
+
+@media screen and (max-width: 786px) {
+    .main .search {
+        width: 55%;
+    }
+}
+
+@media screen and (max-width: 666px) {
+    .main .search {
         width: 60%;
     }
 }
 
 @media screen and (max-width: 556px) {
     .main .search {
-        width: 68%;
+        width: 70%;
     }
 
     .main {

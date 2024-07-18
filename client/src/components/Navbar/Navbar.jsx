@@ -18,7 +18,7 @@ function Navbar() {
     const [showModal, setShowModal] = useState(false);
 
     const context = useContext(UserContext);
-    const { toggle,setUser,setToggle } = context;
+    const { toggle, setUser, setToggle } = context;
 
     const handleLogOut = () => {
         setShowModal(true);
@@ -80,7 +80,7 @@ function Navbar() {
                             </div>
                         </Link>
 
-                        <div className="logout" onClick={() => {handleLogOut(); setToggle(false)}}>
+                        <div className="logout" onClick={() => { handleLogOut(); setToggle(false) }}>
                             <LogoutIcon /> Logout
                         </div>
 
