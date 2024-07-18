@@ -30,8 +30,8 @@ function Header() {
     }
 
     return (
-        <div className='header' onClick={() => setToggle(!toggle)}>
-            <MenuIcon className='menu-icon'/>
+        <div className='header' >
+            <MenuIcon className='menu-icon' onClick={() => setToggle(!toggle)}/>
 
             <Link to={'/'} className='link'>
                 <div className="left">

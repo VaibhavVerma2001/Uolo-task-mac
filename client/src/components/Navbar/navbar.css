@@ -1,28 +1,35 @@
-.side-navbar{
+.side-navbar {
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
-    min-height: calc(100vh - 72px); 
-    flex : 15%;
+    min-height: calc(100vh - 72px);
+    flex: 15%;
     padding: 16px 0;
-    box-shadow: 4px 0px 4px 0px rgba(0,0,0,0.05);
+    box-shadow: 4px 0px 4px 0px rgba(0, 0, 0, 0.05);
     z-index: 1;
 }
 
-.side-navbar .item{
+.side-navbar .item {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     height: 48px;
     padding: 12px 16px;
     gap: 8px;
-} 
+    font-family: "Open" Sans;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    text-align: left;
 
-.side-navbar .item .icon{
+}
+
+.item .icon {
     font-size: 24px;
 }
 
-.side-navbar .item span{
+.side-navbar .item span {
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 20px;
@@ -31,40 +38,127 @@
     cursor: pointer;
 }
 
-.side-navbar .active{
-    background-color: #561FE710; /* last 2 digits are for opacity */
+.side-navbar .active {
+    background-color: #561FE710;
+    /* last 2 digits are for opacity */
     color: #561FE7;
 }
 
-.side-navbar .inactive{
+.side-navbar .inactive {
     color: #667085;
 }
 
-.side-navbar .active-span{
+
+
+/* ********************* Toggle - sidebar **************** */
+
+.toggle-sidebar .backdrop {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    background: rgb(0.2, 0.2, 0.2, 0.5);
+}
+
+.toggle-sidebar .sidebar-container {
+    background-color: #ffffff;
+    width: 80vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.toggle-sidebar .sidebar-container .close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: grey;
+}
+
+
+.toggle-sidebar .sidebar-container .logo {
+    height: 32px;
+    width: 95px;
+    margin: 55px auto 90px;
+}
+
+.toggle-sidebar .sidebar-container .item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 48px;
+    padding: 12px 16px;
+    gap: 8px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    text-align: left;
+
+}
+
+.toggle-sidebar .sidebar-container .active {
+    background-color: #561FE710;
     color: #561FE7;
 }
 
-.side-navbar .inactive-span{
+.toggle-sidebar .sidebar-container .inactive {
     color: #667085;
 }
 
+.toggle-sidebar .sidebar-container .logout {
+    position: absolute;
+    bottom: 10px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    height: 25px;
+    width: 120px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 19.07px;
+    letter-spacing: 0.44999998807907104px;
+    color: #667085;
+    cursor: pointer;
+}
+
+
+
+/********************* Media Query *********************/
 
 
 
 @media screen and (max-width: 1245px) {
     .side-navbar {
-      flex : 20%;
+        flex: 20%;
     }
 }
 
 @media screen and (max-width: 984px) {
     .side-navbar {
-      flex : 27%;
+        flex: 27%;
     }
 }
 
 @media screen and (max-width: 786px) {
     .side-navbar {
-      display: none;
+        display: none;
+    }
+}
+
+/* make dispplay none for toggle-sidebar */
+@media screen and (min-width: 786px) {
+    .toggle-sidebar {
+        display: none;
     }
 }
