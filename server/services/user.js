@@ -188,7 +188,7 @@ const userLogin = async (email, userPassword) => {
         //compare entered password with that found user hashed password
         const passwordCompare = await bcrypt.compare(userPassword, user.password); //returns true or false
         if (!passwordCompare) {
-            return { ok: false, error: "Login with correct credentials!" }
+            return { ok: false, error: "Wrong username of password!" }
         }
 
         const accessToken = jwt.sign(
