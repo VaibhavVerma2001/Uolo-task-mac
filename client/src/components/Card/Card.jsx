@@ -32,7 +32,7 @@ function Card(props) {
             </Tooltip>
 
             {isLoading ? (
-                <img src= {imgLoader} style={{objectFit:"contain"}} alt="user-pic" />
+                <img src={imgLoader} alt="user-pic" />
             ) : (
                 <img src={user.imgUrl} alt="user-pic" />
             )}
